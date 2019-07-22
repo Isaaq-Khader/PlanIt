@@ -75,17 +75,17 @@ class DayPage(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'text/html'
         self.response.write(template.render())
 
-class PlanningPage
+class PlanningPage(webapp2.RequestHandler):
     def get(self):
         template = JINJA_ENVIRONMENT.get_template('templates/planning.html')
         self.response.headers['Content-Type'] = 'text/html'
         self.response.write(template.render())
 
-class ContactPage
-def get(self):
-    template = JINJA_ENVIRONMENT.get_template('templates/contact.html')
-    self.response.headers['Content-Type'] = 'text/html'
-    self.response.write(template.render())
+class ContactPage(webapp2.RequestHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('templates/contact.html')
+        self.response.headers['Content-Type'] = 'text/html'
+        self.response.write(template.render())
 
 class DeleteInvites(webapp2.RequestHandler):
     '''The handler for deleting invites.'''
@@ -99,16 +99,14 @@ class DeleteInvites(webapp2.RequestHandler):
         self.redirect('/invite')
 
 
-
-
 # The App Config
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/invite', InvitePage),
     ('/day', DayPage),
     ('/delete_invites', DeleteInvites),
-    ('/contact',ContactPage)
-    ('/planning',PlanningPage)
+    ('/contact',ContactPage),
+    ('/planning',PlanningPage),
 
 
 ], debug=True)
