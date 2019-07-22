@@ -26,3 +26,6 @@ a {
 .btn_login:hover {
   background-color: gold;
 }
+.sub_header {
+  font-family: 'Indie Flower', cursive;
+}
