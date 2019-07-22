@@ -36,9 +36,6 @@ class MainPage(webapp2.RequestHandler):
 # The App Config
 app = webapp2.WSGIApplication([
     ('/', MainPage),
-    ('/editor',SoonToBeEditor),
-    ('/youtube-dreams',YoutubeDreams),
-    ('/youtube',Youtube),
-    ('/more',MoreOnMe),
+    
 
 ], debug=True)
