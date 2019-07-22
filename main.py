@@ -11,6 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from google.appengine.ext import vendor
+
+# Add any libraries install in the "lib" folder.
+vendor.add('lib')
 
 import webapp2
 import jinja2
