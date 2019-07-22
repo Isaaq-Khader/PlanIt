@@ -1,0 +1,47 @@
+.welcome {
+  text-align: center;
+  color: white;
+}
+body {
+  background-image: url("https://wallpaperaccess.com/full/84291.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+a {
+  color: black;
+}
+
+.main_header {
+  font-size: 60px;
+  margin: 0px;
+  text-transform: capitalize;
+  font-family: 'Indie Flower', cursive;
+}
+.btn_login {
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+}
+.btn_login:hover {
+  background-color: gold;
+}
+.sub_header {
+  font-family: 'Indie Flower', cursive;
+}
+.container {
+  color: white;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+
+#box_1 {
+  width: 200px;
+  margin-right: 500px;
+  margin-top: 300px;
+}
+#box_2 {
+  width: 200px;
+  margin-top: 300px;
+}
