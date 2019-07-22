@@ -3,15 +3,19 @@
   <head>
     <title></title>
    <link rel="stylesheet" href="/css/style.css">
+   <link href="https://fonts.googleapis.com/css?family=Indie+Flower|Roboto+Mono&display=swap" rel="stylesheet">
   </head>
   <body>
-    <h1 id ="welcome"> Welcome </h1>
+    <div class="welcome">
+
+    <h1 class = "main_header"> Welcome to PlanIt </h1>
     {% if user %}
-    <h1>User is {{user.email()}}</h1>
-    <a href="{{logout_url}}">Logout</a>
+    <h1>Hello {{user.email()}}</h1>
+    <button id="btn_login"><a href="{{logout_url}}"></a>Logout</button>
     {% else %}
     <h1>No user!</h1>
     <a href="{{login_url}}">Login</a>
     {% endif %}
+      </div>
   </body>
 </html>

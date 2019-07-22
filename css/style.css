@@ -1,0 +1,28 @@
+.welcome {
+  text-align: center;
+  color: white;
+}
+body {
+  background-image: url("https://wallpaperaccess.com/full/84291.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+a {
+  color: white;
+}
+
+.main_header {
+  font-size: 60px;
+  margin: 0px;
+  text-transform: capitalize;
+  font-family: 'Indie Flower', cursive;
+}
+#btn_login {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+}
+#btn_login:hover {
+  background-color: yellow;
+}
