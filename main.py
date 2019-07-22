@@ -61,13 +61,24 @@ class DayPage(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'text/html'
         self.response.write(template.render())
 
-
-
+class PlanningPage(webapp2.RequestHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('templates/planning.html')
+        self.response.headers['Content-Type'] = 'text/html'
+        self.response.write(template.render())
+class ContactPage(webapp2.RequestHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('templates/contact.html')
+        self.response.headers['Content-Type'] = 'text/html'
+        self.response.write(template.render())
 
 # The App Config
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/invite', InvitePage),
     ('/day', DayPage),
+    ('/planning', PlanningPage),
+    ('/contact', ContactPage),
+    
 
 ], debug=True)

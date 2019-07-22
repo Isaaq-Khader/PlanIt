@@ -45,3 +45,20 @@ a {
   width: 200px;
   margin-top: 300px;
 }
+#bullets {
+  color: white
+
+}
+ul {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+
+}
+li {
+  list-style-type: none;
+  float: left;
+}
+li a {
+  padding: 10px;
+}
