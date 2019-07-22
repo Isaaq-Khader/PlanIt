@@ -66,6 +66,8 @@ class DayPage(webapp2.RequestHandler):
 
 # The App Config
 app = webapp2.WSGIApplication([
-    ('/', MainPage), ('/invite', InvitePage), ('/day', DayPage)
+    ('/', MainPage),
+    ('/invite', InvitePage),
+    ('/day', DayPage),
 
 ], debug=True)
