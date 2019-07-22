@@ -6,6 +6,12 @@
 
   </head>
   <body>
-
+    {% if user %}
+    <h1>User is {{user.email()}}</h1>
+    <a href="{{logout_url}}">Logout</a>
+    {% else %}
+    <h1>No user!</h1>
+    <a href="{{login_url}}">Login</a>
+    {% endif %}
   </body>
 </html>
