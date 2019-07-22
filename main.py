@@ -16,17 +16,30 @@ from google.appengine.ext import vendor
 # Add any libraries install in the "lib" folder.
 vendor.add('lib')
 
+import httplib2
 import webapp2
 import jinja2
 import os
-from google.appengine.api import users
+import pickle
 
 from google.appengine.api import users
+from googleapiclient import discovery
+from oauth2client import client
+from oauth2client.contrib import appengine
+from google.appengine.api import memcache
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
+
+CLIENT_SECRETS = os.path.join(os.path.dirname(__file__), 'client_secrets.json')
+
+http = httplib2.Http(memcache)
+service = discovery.build("calendar", "v3", http=http)
+decorator = appengine.oauth2decorator_from_clientsecrets(
+    CLIENT_SECRETS,
+    scope='https://www.googleapis.com/auth/calendar')
 
 def root_parent():
     '''A single key to be used as the ancestor for all dog entries.
@@ -38,8 +51,8 @@ def root_parent():
     #'''A database entry representing a single user.'''
     #email = ndb.StringProperty()
 
-
 class MainPage(webapp2.RequestHandler):
+    @decorator.oauth_required
     def get(self):
         user = users.get_current_user()
         template = JINJA_ENVIRONMENT.get_template('templates/index.html')
@@ -51,6 +64,13 @@ class MainPage(webapp2.RequestHandler):
         }
         self.response.headers['Content-Type'] = 'text/html'
         self.response.write(template.render(data))
+        try:
+            http = decorator.http()
+            calendarList = service.calendarList().list(pageToken=None).execute(http=http)
+            for calendar_list_entry in calendarList['items']:
+                print(calendar_list_entry['summary'])
+        except client.AccessTokenRefreshError:
+            self.redirect(decorator.authorize_url())
 
 
 class InvitePage(webapp2.RequestHandler):
@@ -73,5 +93,6 @@ app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/invite', InvitePage),
     ('/day', DayPage),
+    (decorator.callback_path, decorator.callback_handler()),
 
 ], debug=True)
