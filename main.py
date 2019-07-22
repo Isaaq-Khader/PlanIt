@@ -17,10 +17,23 @@ import jinja2
 import os
 from google.appengine.api import users
 
+from google.appengine.api import users
+
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
+
+def root_parent():
+    '''A single key to be used as the ancestor for all dog entries.
+
+    Allows for strong consistency at the cost of scalability.'''
+    return ndb.Key('Parent', 'default_parent')
+
+#class Invites(ndb.Model):
+    #'''A database entry representing a single user.'''
+    #email = ndb.StringProperty()
+
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
@@ -30,13 +43,29 @@ class MainPage(webapp2.RequestHandler):
           'user': user,
           'login_url': users.create_login_url(self.request.uri),
           'logout_url': users.create_logout_url(self.request.uri),
+
         }
         self.response.headers['Content-Type'] = 'text/html'
         self.response.write(template.render(data))
 
+
+class InvitePage(webapp2.RequestHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('templates/invite.html')
+        self.response.headers['Content-Type'] = 'text/html'
+        self.response.write(template.render())
+
+class DayPage(webapp2.RequestHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('templates/day.html')
+        self.response.headers['Content-Type'] = 'text/html'
+        self.response.write(template.render())
+
+
+
+
 # The App Config
 app = webapp2.WSGIApplication([
-    ('/', MainPage),
-
+    ('/', MainPage), ('/invite', InvitePage), ('/day', DayPage)
 
 ], debug=True)
