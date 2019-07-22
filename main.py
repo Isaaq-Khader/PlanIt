@@ -23,8 +23,16 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
+        user = users.get_current_user()
+        template = JINJA_ENVIRONMENT.get_template('templates/Login_Logout.html')
+        data = {
+          'user': user,
+          'login_url': users.create_login_url(self.request.uri),
+          'logout_url': users.create_logout_url(self.request.uri),
+        }
         self.response.headers['Content-Type'] = 'text/html'
-        self.response.render()
+        self.response.write(template.render(data))
+
 # The App Config
 app = webapp2.WSGIApplication([
     ('/', MainPage),
