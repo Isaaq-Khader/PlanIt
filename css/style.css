@@ -29,3 +29,19 @@ a {
 .sub_header {
   font-family: 'Indie Flower', cursive;
 }
+.container {
+  color: white;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+
+#box_1 {
+  width: 200px;
+  margin-right: 500px;
+  margin-top: 300px;
+}
+#box_2 {
+  width: 200px;
+  margin-top: 300px;
+}
