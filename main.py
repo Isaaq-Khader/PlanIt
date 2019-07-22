@@ -15,6 +15,7 @@
 import webapp2
 import jinja2
 import os
+from google.appengine.api import users
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -36,9 +37,6 @@ class MainPage(webapp2.RequestHandler):
 # The App Config
 app = webapp2.WSGIApplication([
     ('/', MainPage),
-    ('/editor',SoonToBeEditor),
-    ('/youtube-dreams',YoutubeDreams),
-    ('/youtube',Youtube),
-    ('/more',MoreOnMe),
+
 
 ], debug=True)
