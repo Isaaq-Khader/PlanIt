@@ -10,14 +10,34 @@
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
+.contactpage {
+ background-color: #202033 ;
+}
 a {
   color: black;
+}
+#contactheader {
+  font-family: 'Indie Flower', cursive;
+  text-align:center;
+  font-size: 60px;
+  margin: 0px;
+  color: white;
+
+}
+#contactsummary{
+  text-align: center;
+  font-size: 20px;
+  color: white;
+  margin: 0px;
+  font-family: 'Roboto Mono', monospace;
+
 }
 .invite_main_cantainer {
   justify-content: center;
   display: flex;
-  
+
 }
+
 .main_header {
   font-size: 60px;
   margin: 0px;
@@ -31,8 +51,7 @@ a {
   0%   {background-color:red;
 
   }
-  25%  {background-color:yellow;
-
+  25%  {background-color:gold;
   }
   50%  {background-color:blue;
   }
@@ -94,4 +113,61 @@ li {
 }
 li a {
   padding: 10px;
+}
+
+/* this is the css for the blinking cursor*/
+.blinking-cursor {
+  font-weight: 100;
+  font-size: 30px;
+  color: #2E3D48;
+  -webkit-animation: 1s blink step-end infinite;
+  -moz-animation: 1s blink step-end infinite;
+  -ms-animation: 1s blink step-end infinite;
+  -o-animation: 1s blink step-end infinite;
+  animation: 1s blink step-end infinite;
+}
+
+@keyframes "blink" {
+  from, to {
+    color: transparent;
+  }
+  50% {
+    color: white;
+  }
+}
+
+@-moz-keyframes blink {
+  from, to {
+    color: transparent;
+  }
+  50% {
+    color: white;
+  }
+}
+
+@-webkit-keyframes "blink" {
+  from, to {
+    color: transparent;
+  }
+  50% {
+    color: white;
+  }
+}
+
+@-ms-keyframes "blink" {
+  from, to {
+    color: transparent;
+  }
+  50% {
+    color: white;
+  }
+}
+
+@-o-keyframes "blink" {
+  from, to {
+    color: transparent;
+  }
+  50% {
+    color: white;
+  }
 }

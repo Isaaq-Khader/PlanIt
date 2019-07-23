@@ -58,6 +58,7 @@ class Event(ndb.Model):
     startTime = ndb.StringProperty()
     endTime = ndb.StringProperty()
 
+
 class Invite(ndb.Model):
     '''A database entry representing a single user.'''
     email = ndb.StringProperty()
@@ -94,10 +95,11 @@ class InvitePage(webapp2.RequestHandler):
             return
         template = JINJA_ENVIRONMENT.get_template('templates/invite.html')
         self.response.headers['Content-Type'] = 'text/html'
+        print event_key
         emails = Invite.query(Invite.event_key == ndb.Key(urlsafe=event_key), ancestor=root_parent()).fetch()
         data = {
             'invites': emails,
-            'event_key': event_key,
+            'invites': Invite.query(ancestor=root_parent()).fetch()
         }
         self.response.write(template.render(data))
 
@@ -207,6 +209,7 @@ class DeleteInvites(webapp2.RequestHandler):
         # redirect to '/' so that the MainPage.get() handler will run and show
         # the list of dogs.
         self.redirect('/invite?event_key='+event_key)
+
 
 class Confirmation(webapp2.RequestHandler):
     def get(self):
