@@ -56,6 +56,7 @@ class Event(ndb.Model):
     description = ndb.StringProperty()
     startTime = ndb.StringProperty()
     endTime = ndb.StringProperty()
+    
 
 class Invite(ndb.Model):
     '''A database entry representing a single user.'''
@@ -169,7 +170,7 @@ class DeleteInvites(webapp2.RequestHandler):
     def post(self):
         event_key = self.request.get('event_key')
         to_delete = self.request.get('to_delete', allow_multiple=True)
-        
+
         for entry in to_delete:
             key = ndb.Key(urlsafe=entry)
             key.delete()
@@ -204,7 +205,6 @@ app = webapp2.WSGIApplication([
     ('/day', DayPage),
     ('/delete_invites', DeleteInvites),
     ('/contact',ContactPage),
-    ('/planning',PlanningPage),
     #('confirmation',Confirmation),
     (decorator.callback_path, decorator.callback_handler()),
 
