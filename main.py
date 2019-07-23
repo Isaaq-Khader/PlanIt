@@ -103,7 +103,6 @@ class InvitePage(webapp2.RequestHandler):
     def post(self):
         new_invite = Invite(parent=root_parent())
         new_invite.email = self.request.get('email')
-
         new_invite.event_key = ndb.Key(urlsafe=self.request.get('event_key'))
         new_invite.put()
 
