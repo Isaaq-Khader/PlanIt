@@ -11,35 +11,78 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+# WEBSITE: https://planit-247516.appspot.com
+
 from google.appengine.ext import vendor
 
 # Add any libraries install in the "lib" folder.
 vendor.add('lib')
 
+import httplib2
 import webapp2
 import jinja2
 import os
-from google.appengine.api import users
-from google.appengine.ext import ndb
+import pickle
 
+from google.appengine.api import users
+from googleapiclient import discovery
+from oauth2client import client
+from oauth2client.contrib import appengine
+from google.appengine.api import memcache
+from google.appengine.ext import ndb
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
 
-def root_parent():
-    '''A single key to be used as the ancestor for all dog entries.
+CLIENT_SECRETS = os.path.join(os.path.dirname(__file__), 'client_secrets.json')
 
-    Allows for strong consistency at the cost of scalability.'''
+http = httplib2.Http(memcache)
+service = discovery.build("calendar", "v3", http=http)
+decorator = appengine.oauth2decorator_from_clientsecrets(
+    CLIENT_SECRETS,
+    scope='https://www.googleapis.com/auth/calendar')
+
+def root_parent():
+    '''Allows for strong consistency at the cost of scalability.'''
     return ndb.Key('Parent', 'default_parent')
+
+class CreateEvent(webapp2.RequestHandler):
+    event = {
+      'summary': nbd.StringProperty(),
+      'location': nbd.StringProperty(),
+      'description': nbd.StringProperty(),
+      'start': {
+        'dateTime': '2015-05-28T09:00:00-07:00',
+        'timeZone': 'America/Los_Angeles',
+      },
+      'end': {
+        'dateTime': '2015-05-28T17:00:00-07:00',
+        'timeZone': 'America/Los_Angeles',
+      },
+      'attendees': [
+        {'email': nbd.StringProperty()}
+      ],
+      'reminders': {
+        'useDefault': False,
+        'overrides': [
+          {'method': 'email', 'minutes': 24 * 60},
+          {'method': 'popup', 'minutes': 10},
+        ],
+      },
+    }
+
+event = service.events().insert(calendarId='primary', body=event).execute()
+print 'Event created: %s' % (event.get('htmlLink'))
 
 class Invite(ndb.Model):
     '''A database entry representing a single user.'''
     email = ndb.StringProperty()
 
-
 class MainPage(webapp2.RequestHandler):
+    @decorator.oauth_required
     def get(self):
         user = users.get_current_user()
         template = JINJA_ENVIRONMENT.get_template('templates/index.html')
@@ -51,6 +94,13 @@ class MainPage(webapp2.RequestHandler):
         }
         self.response.headers['Content-Type'] = 'text/html'
         self.response.write(template.render(data))
+        try:
+            http = decorator.http()
+            calendarList = service.calendarList().list(pageToken=None).execute(http=http)
+            for calendar_list_entry in calendarList['items']:
+                print(calendar_list_entry['summary'])
+        except client.AccessTokenRefreshError:
+            self.redirect(decorator.authorize_url())
 
 class InvitePage(webapp2.RequestHandler):
     def get(self):
@@ -59,15 +109,18 @@ class InvitePage(webapp2.RequestHandler):
         data = {
             'invites': Invite.query(ancestor=root_parent()).fetch()
         }
-
         self.response.write(template.render(data))
 
     def post(self):
-                new_invite = Invite(parent=root_parent())
-                new_invite.email = self.request.get('email')
-                new_invite.put()
+        # INVITIES HAS NOT BEEN TESTED!!!
+        new_invite = Invite(parent=root_parent())
+        invities = CreateEvent(parent=root_parent())
+        new_invite.email = self.request.get('email')
+        invities.attendees.email = self.request.get('email')
+        new_invite.put()
+        invities.put()
 
-                self.redirect('/invite')
+        self.redirect('/invite')
 
 class DayPage(webapp2.RequestHandler):
     def get(self):
@@ -99,8 +152,6 @@ class DeleteInvites(webapp2.RequestHandler):
         self.redirect('/invite')
 
 
-
-
 # The App Config
 app = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -108,7 +159,7 @@ app = webapp2.WSGIApplication([
     ('/day', DayPage),
     ('/delete_invites', DeleteInvites),
     ('/contact',ContactPage),
-    ('/planning',PlanningPage)
-
+    ('/planning',PlanningPage),
+    (decorator.callback_path, decorator.callback_handler()),
 
 ], debug=True)
