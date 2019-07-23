@@ -49,33 +49,8 @@ def root_parent():
     '''Allows for strong consistency at the cost of scalability.'''
     return ndb.Key('Parent', 'default_parent')
 
-class CreateEvent(webapp2.RequestHandler):
-    event = {
-      'summary': nbd.StringProperty(),
-      'location': nbd.StringProperty(),
-      'description': nbd.StringProperty(),
-      'start': {
-        'dateTime': '2015-05-28T09:00:00-07:00',
-        'timeZone': 'America/Los_Angeles',
-      },
-      'end': {
-        'dateTime': '2015-05-28T17:00:00-07:00',
-        'timeZone': 'America/Los_Angeles',
-      },
-      'attendees': [
-        {'email': nbd.StringProperty()}
-      ],
-      'reminders': {
-        'useDefault': False,
-        'overrides': [
-          {'method': 'email', 'minutes': 24 * 60},
-          {'method': 'popup', 'minutes': 10},
-        ],
-      },
-    }
-
-event = service.events().insert(calendarId='primary', body=event).execute()
-print 'Event created: %s' % (event.get('htmlLink'))
+    event = service.events().insert(calendarId='primary', body=event).execute()
+    print 'Event created: %s' % (event.get('htmlLink'))
 
 class Invite(ndb.Model):
     '''A database entry representing a single user.'''
@@ -151,12 +126,31 @@ class DeleteInvites(webapp2.RequestHandler):
         # the list of dogs.
         self.redirect('/invite')
 
+class Confirmation(webapp2.RequestHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('templates/confirmation.html')
+        self.response.headers['Content-Type'] = 'text/html'
+        data = {
+            'invites': Invite.query(ancestor=root_parent()).fetch()
+        }
+        self.response.write(template.render(data))
+
+    def post(self):
+        # INVITIES HAS NOT BEEN TESTED!!!
+        new_invite = Invite(parent=root_parent())
+        invities = CreateEvent(parent=root_parent())
+        new_invite.email = self.request.get('email')
+        invities.attendees.email = self.request.get('email')
+        new_invite.put()
+        invities.put()
+
+        self.redirect('/invite')
 
 # The App Config
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/invite', InvitePage),
-    ('/day', DayPage),
+    #('/day', DayPage),
     ('/delete_invites', DeleteInvites),
     ('/contact',ContactPage),
     ('/planning',PlanningPage),
