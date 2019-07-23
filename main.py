@@ -112,7 +112,7 @@ class PlanningPage(webapp2.RequestHandler):
 
         event = {
           'summary': sum_param,
-          'location': location_param,
+          'location': 'event_place',
           'description': desc_param,
           'start': {
             'dateTime': '2015-05-28T09:00:00-07:00',
