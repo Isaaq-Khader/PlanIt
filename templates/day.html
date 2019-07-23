@@ -1,2 +1,5 @@
 <!-- This page is for choosing what day everyone will hang out -->
 <h1>avalible days</h1>
+{% for name in invites %}
+<p>{{name.email}}</p>
+{% endfor %}
