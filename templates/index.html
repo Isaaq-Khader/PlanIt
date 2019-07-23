@@ -6,24 +6,15 @@
    <link href="https://fonts.googleapis.com/css?family=Indie+Flower|Roboto+Mono&display=swap" rel="stylesheet">
   </head>
   <body>
-
-    <ul id="bullets">
-      <li><a href="/"style="color: white;">Home</a></li>
-      <li><a href="/contact"style="color: white;">Contact</a></li>
-      <li><a href="/invite" style="color: white;">Invite</a></li>
-      <li><a href="/planning"style="color: white;">Planning</a></li>
-      <li><a href="/day"style="color: white;">Day</a></li>
-
-    </ul>
     <div class="welcome">
 
     <h1 class = "main_header">Welcome to PlanIt</h1>
     {% if user %}
     <h1>Hello {{user.email()}}</h1>
-    <button class="btn_login"><a href="{{login_url}}">Logout</a></button>
+    <button class="btn_login"><a href="{{logout_url}}">Logout</a></button>
     {% else %}
     <h2 class = "sub_header">Please Login Below</h2>
-    <button class="btn_login"><a href="{{logout_url}}">Login</a></button>
+    <button class="btn_login"><a href="{{login_url}}">Login</a></button>
 
     <div class="container">
       <div id="box_1">
@@ -37,8 +28,14 @@
 
     </div>
     {% endif %}
-  </div>
+    </div>
 
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="/contact">Contact</a></li>
+      <li><a href="/invite" style="color: white;">Invite</a></li>
+      <li><a href="/planning">Planning</a></li>
+    </ul>
 
 
   </body>
