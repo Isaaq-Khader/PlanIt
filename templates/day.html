@@ -1,10 +1,38 @@
 <!-- This page is for choosing what day everyone will hang out -->
-<h1>avalible days</h1>
-{% for name in invites %}
-<p>{{name.email}}</p>
-{% endfor %}
-</form>
-<p>
-  <form action="/planning">
-    <input type="submit" name="" value = "continue"</input>
-  </form>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+  <title>Event Details</title>
+  </head>
+  <body>
+    <h1>avalible days</h1>
+    {% for name in invites %}
+    <p>{{name.email}}</p>
+    {% endfor %}
+    <h1>Great! Your day is July 22 2019!</h1>
+      <h2>Enter in some info about your hangout!</h2>
+    <form method="post">
+      <div>
+        Title: <input type="text" name="event_title" value="">
+      </div>
+      <div>
+        Description: <input type="text" name="event_des" value="">
+      </div>
+      <div>
+        Place: <input type="text" name="event_place" value="">
+      </div>
+      <div>
+        Date: <input type="date" name="event_date" value="">
+      </div>
+      <div>
+        Start Time: <input type="time" name="event_start" value="">
+      </div>
+      <div>
+        End Time: <input type="time" name="event_end" value="">
+      </div>
+      <input type="submit" name="" value="Submit">
+    </form>
+
+  </body>
+</html>

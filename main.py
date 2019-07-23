@@ -43,7 +43,7 @@ http = httplib2.Http(memcache)
 service = discovery.build("calendar", "v3", http=http)
 decorator = appengine.oauth2decorator_from_clientsecrets(
     CLIENT_SECRETS,
-    scope='https://www.googleapis.com/auth/calendar')
+    scope='https://www.googleapis.com/auth/calendar.events')
 
 def root_parent():
     '''Allows for strong consistency at the cost of scalability.'''
@@ -54,6 +54,7 @@ class Event(ndb.Model):
     place = ndb.StringProperty()
     title = ndb.StringProperty()
     description = ndb.StringProperty()
+    location = ndb.StringProperty()
     startTime = ndb.StringProperty()
     endTime = ndb.StringProperty()
 
@@ -64,7 +65,7 @@ class Invite(ndb.Model):
 
 
 class MainPage(webapp2.RequestHandler):
-    # @decorator.oauth_required
+
     def get(self):
         user = users.get_current_user()
         template = JINJA_ENVIRONMENT.get_template('templates/index.html')
@@ -109,6 +110,7 @@ class InvitePage(webapp2.RequestHandler):
         self.redirect('/invite?event_key='+self.request.get('event_key'))
 
 class DayPage(webapp2.RequestHandler):
+    @decorator.oauth_required
     def get(self):
         event_key = self.request.get('event_key')
         template = JINJA_ENVIRONMENT.get_template('templates/day.html')
@@ -119,31 +121,53 @@ class DayPage(webapp2.RequestHandler):
             'event_key': event_key,
         }
         self.response.write(template.render(data))
+    @decorator.oauth_required
+    def post(self):
+        event_key = self.request.get('event_key')
+        invites = Invite.query(Invite.event_key == ndb.Key(urlsafe=event_key), ancestor=root_parent()).fetch()
+        attendees = []
+        for invite in invites:
+            attendee = {
+                'email': invite.email
+            }
+            attendees.append(attendee)
 
-class PlanningPage(webapp2.RequestHandler):
-    def get(self):
-        template = JINJA_ENVIRONMENT.get_template('templates/planning.html')
         sum_param = self.request.get('event_title')
         location_param = self.request.get('event_place')
         des_param = self.request.get('event_des')
         event_start_param = self.request.get('event_start')
         event_end_param = self.request.get('event_end')
-        attending_param = self.request.get('emails')
+        event_date_param = self.request.get('event_date')
+
+        new_event = Event(parent=root_parent())
+        new_event.title = self.request.get('event_title')
+        new_event.description = self.request.get('event_des')
+        new_event.event_key = ndb.Key(urlsafe=self.request.get('event_key'))
+        new_event.location= self.request.get('event_place')
+        new_event.put()
+
+        dateTimeStart = event_date_param + "T17:00:00-" + event_start_param
+        dateTimeEnd = event_date_param + "T17:00:00-" + event_end_param
+
+        print event_start_param
+        print event_end_param
+        print event_date_param
+        print dateTimeStart
+        print dateTimeEnd
+
         event = {
           'summary': sum_param,
           'location': location_param,
           'description': des_param,
           'start': {
-            'dateTime': '2015-05-28T09:00:00-07:00',
+            'dateTime': dateTimeStart, #'2019-07-23T17:00:00-07:00'
             'timeZone': 'America/Los_Angeles',
           },
           'end': {
-            'dateTime': '2015-05-28T17:00:00-07:00',
+            'dateTime': dateTimeEnd,
             'timeZone': 'America/Los_Angeles',
           },
-          'attendees': [
-            {'email': 'attending_param'}
-          ],
+          'attendees': attendees,
           'reminders': {
             'useDefault': False,
             'overrides': [
@@ -152,11 +176,18 @@ class PlanningPage(webapp2.RequestHandler):
             ],
           },
         }
+        # try:
+        #     http = decorator.http()
+        #     calendarList = service.calendarList().list(pageToken=None).execute(http=http)
+        #     for calendar_list_entry in calendarList['items']:
+        #         print(calendar_list_entry['summary'])
+        # except client.AccessTokenRefreshError:
+        #     self.redirect(decorator.authorize_url())
 
-        # event = service.events().insert(calendarId='primary', body=event).execute()
-        # print 'Event created: %s' % (event.get('htmlLink'))
-        self.response.headers['Content-Type'] = 'text/html'
-        self.response.write(template.render(event))
+        http = decorator.http()
+        e = service.events().insert(calendarId='primary', body=event).execute(http=http)
+        print 'Event created: %s' % (e.get('htmlLink'))
+        self.redirect('/confirmation?event_key='+event_key)
 
 class ContactPage(webapp2.RequestHandler):
     def get(self):
@@ -169,7 +200,7 @@ class DeleteInvites(webapp2.RequestHandler):
     def post(self):
         event_key = self.request.get('event_key')
         to_delete = self.request.get('to_delete', allow_multiple=True)
-        
+
         for entry in to_delete:
             key = ndb.Key(urlsafe=entry)
             key.delete()
@@ -204,8 +235,7 @@ app = webapp2.WSGIApplication([
     ('/day', DayPage),
     ('/delete_invites', DeleteInvites),
     ('/contact',ContactPage),
-    ('/planning',PlanningPage),
-    #('confirmation',Confirmation),
+    ('confirmation',Confirmation),
     (decorator.callback_path, decorator.callback_handler()),
 
 ], debug=True)
