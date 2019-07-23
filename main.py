@@ -95,7 +95,10 @@ class DayPage(webapp2.RequestHandler):
     def get(self):
         template = JINJA_ENVIRONMENT.get_template('templates/day.html')
         self.response.headers['Content-Type'] = 'text/html'
-        self.response.write(template.render())
+        data = {
+            'invites': Invite.query(ancestor=root_parent()).fetch()
+        }
+        self.response.write(template.render(data))
 
 class PlanningPage(webapp2.RequestHandler):
     def get(self):
