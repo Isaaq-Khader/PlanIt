@@ -59,6 +59,14 @@ class Invite(ndb.Model):
     '''A database entry representing a single user.'''
     email = ndb.StringProperty()
 
+class Event(ndb.Model):
+    '''A database entry representing a single user.'''
+    place = ndb.StringProperty()
+    title = ndb.StringProperty()
+    description = ndb.StringProperty()
+    startTime = ndb.StringProperty()
+    endTime = ndb.StringProperty()
+
 class MainPage(webapp2.RequestHandler):
     @decorator.oauth_required
     def get(self):
