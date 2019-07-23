@@ -1,3 +1,5 @@
+
+
 .welcome {
   text-align: center;
   color: white;
@@ -11,17 +13,26 @@
 a {
   color: black;
 }
-
+.invite_main_cantainer {
+  justify-content: center;
+  display: flex;
+  
+}
 .main_header {
   font-size: 60px;
   margin: 0px;
   text-transform: capitalize;
   font-family: 'Indie Flower', cursive;
 }
+#avalible_days {
+
+}
 @keyframes bob {
   0%   {background-color:red;
+
   }
   25%  {background-color:yellow;
+
   }
   50%  {background-color:blue;
   }
@@ -48,7 +59,7 @@ a {
   color: white;
   justify-content: center;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 }
 
 #box_1 {
@@ -62,7 +73,14 @@ a {
 }
 #bullets {
   color: white
+}
 
+.invite_box2 {
+  margin: 0px;
+}
+
+.invite_box1 {
+  margin: 0px;
 }
 ul {
   margin: 0;

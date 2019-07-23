@@ -169,6 +169,7 @@ class DeleteInvites(webapp2.RequestHandler):
     def post(self):
         event_key = self.request.get('event_key')
         to_delete = self.request.get('to_delete', allow_multiple=True)
+        
         for entry in to_delete:
             key = ndb.Key(urlsafe=entry)
             key.delete()
