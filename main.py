@@ -49,9 +49,6 @@ def root_parent():
     '''Allows for strong consistency at the cost of scalability.'''
     return ndb.Key('Parent', 'default_parent')
 
-    event = service.events().insert(calendarId='primary', body=event).execute()
-    print 'Event created: %s' % (event.get('htmlLink'))
-
 class Invite(ndb.Model):
     '''A database entry representing a single user.'''
     email = ndb.StringProperty()
@@ -89,19 +86,16 @@ class InvitePage(webapp2.RequestHandler):
     def post(self):
         # INVITIES HAS NOT BEEN TESTED!!!
         new_invite = Invite(parent=root_parent())
-        invities = CreateEvent(parent=root_parent())
         new_invite.email = self.request.get('email')
-        invities.attendees.email = self.request.get('email')
         new_invite.put()
-        invities.put()
 
         self.redirect('/invite')
 
-# class DayPage(webapp2.RequestHandler):
-#     def get(self):
-#         template = JINJA_ENVIRONMENT.get_template('templates/day.html')
-#         self.response.headers['Content-Type'] = 'text/html'
-#         self.response.write(template.render())
+class DayPage(webapp2.RequestHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('templates/day.html')
+        self.response.headers['Content-Type'] = 'text/html'
+        self.response.write(template.render())
 
 class PlanningPage(webapp2.RequestHandler):
     def get(self):
@@ -150,7 +144,7 @@ class Confirmation(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/invite', InvitePage),
-    #('/day', DayPage),
+    ('/day', DayPage),
     ('/delete_invites', DeleteInvites),
     ('/contact',ContactPage),
     ('/planning',PlanningPage),
