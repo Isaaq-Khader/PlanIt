@@ -227,7 +227,7 @@ app = webapp2.WSGIApplication([
     ('/delete_invites', DeleteInvites),
     ('/contact',ContactPage),
     ('/planning',PlanningPage),
-    ('confirmation',Confirmation)
+    ('confirmation',Confirmation),
     (decorator.callback_path, decorator.callback_handler()),
 
 ], debug=True)
