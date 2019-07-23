@@ -50,32 +50,10 @@ def root_parent():
     return ndb.Key('Parent', 'default_parent')
 
 class CreateEvent(webapp2.RequestHandler):
-    event = {
-      'summary': nbd.StringProperty(),
-      'location': nbd.StringProperty(),
-      'description': nbd.StringProperty(),
-      'start': {
-        'dateTime': '2015-05-28T09:00:00-07:00',
-        'timeZone': 'America/Los_Angeles',
-      },
-      'end': {
-        'dateTime': '2015-05-28T17:00:00-07:00',
-        'timeZone': 'America/Los_Angeles',
-      },
-      'attendees': [
-        {'email': nbd.StringProperty()}
-      ],
-      'reminders': {
-        'useDefault': False,
-        'overrides': [
-          {'method': 'email', 'minutes': 24 * 60},
-          {'method': 'popup', 'minutes': 10},
-        ],
-      },
-    }
 
-event = service.events().insert(calendarId='primary', body=event).execute()
-print 'Event created: %s' % (event.get('htmlLink'))
+
+    event = service.events().insert(calendarId='primary', body=event).execute()
+    print 'Event created: %s' % (event.get('htmlLink'))
 
 class Invite(ndb.Model):
     '''A database entry representing a single user.'''
@@ -125,6 +103,39 @@ class InvitePage(webapp2.RequestHandler):
 class DayPage(webapp2.RequestHandler):
     def get(self):
         template = JINJA_ENVIRONMENT.get_template('templates/day.html')
+        self.response.headers['Content-Type'] = 'text/html'
+        self.response.write(template.render())
+
+class PlanningPage(webapp2.RequestHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('templates/planning.html')
+
+        event = {
+          'summary': sum_param,
+          'location': location_param,
+          'description': desc_param,
+          'start': {
+            'dateTime': '2015-05-28T09:00:00-07:00',
+            'timeZone': 'America/Los_Angeles',
+          },
+          'end': {
+            'dateTime': '2015-05-28T17:00:00-07:00',
+            'timeZone': 'America/Los_Angeles',
+          },
+          'attendees': [
+            {'email': attending_param}
+          ],
+          'reminders': {
+            'useDefault': False,
+            'overrides': [
+              {'method': 'email', 'minutes': 24 * 60},
+              {'method': 'popup', 'minutes': 10},
+            ],
+          },
+        }
+
+event = service.events().insert(calendarId='primary', body=event).execute()
+print 'Event created: %s' % (event.get('htmlLink'))
         self.response.headers['Content-Type'] = 'text/html'
         self.response.write(template.render())
 
