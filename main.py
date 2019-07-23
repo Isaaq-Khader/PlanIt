@@ -109,7 +109,7 @@ class DayPage(webapp2.RequestHandler):
 class PlanningPage(webapp2.RequestHandler):
     def get(self):
         template = JINJA_ENVIRONMENT.get_template('templates/planning.html')
-        
+        sum_param = self.request.get('name')
         event = {
           'summary': sum_param,
           'location': location_param,
@@ -134,8 +134,8 @@ class PlanningPage(webapp2.RequestHandler):
           },
         }
 
-event = service.events().insert(calendarId='primary', body=event).execute()
-print 'Event created: %s' % (event.get('htmlLink'))
+        event = service.events().insert(calendarId='primary', body=event).execute()
+        print 'Event created: %s' % (event.get('htmlLink'))
         self.response.headers['Content-Type'] = 'text/html'
         self.response.write(template.render())
 
