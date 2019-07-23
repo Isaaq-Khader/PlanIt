@@ -60,6 +60,7 @@ class Event(ndb.Model):
 class Invite(ndb.Model):
     '''A database entry representing a single user.'''
     email = ndb.StringProperty()
+    event_key = ndb.KeyProperty(Event)
 
 
 class MainPage(webapp2.RequestHandler):
@@ -85,20 +86,28 @@ class MainPage(webapp2.RequestHandler):
 
 class InvitePage(webapp2.RequestHandler):
     def get(self):
+        event_key = self.request.get('event_key')
+        if event_key == "":
+            new_event = Event().put()
+            self.redirect('/invite?event_key='+new_event.urlsafe())
+            return
         template = JINJA_ENVIRONMENT.get_template('templates/invite.html')
         self.response.headers['Content-Type'] = 'text/html'
+        print event_key
+        emails = Invite.query(Invite.event_key == ndb.Key(urlsafe=event_key), ancestor=root_parent()).fetch()
         data = {
-            'invites': Invite.query(ancestor=root_parent()).fetch()
+            'invites': emails
         }
         self.response.write(template.render(data))
 
     def post(self):
-        # INVITIES HAS NOT BEEN TESTED!!!
         new_invite = Invite(parent=root_parent())
         new_invite.email = self.request.get('email')
+
+        new_invite.event_key = ndb.Key(urlsafe=self.request.get('event_key'))
         new_invite.put()
 
-        self.redirect('/invite')
+        self.redirect('/invite?event_key='+self.request.get('event_key'))
 
 class DayPage(webapp2.RequestHandler):
     def get(self):
@@ -117,9 +126,10 @@ class PlanningPage(webapp2.RequestHandler):
         des_param = self.request.get('event_des')
         event_start_param = self.request.get('event_start')
         event_end_param = self.request.get('event_end')
+        attending_param = self.request.get('emails')
         event = {
           'summary': sum_param,
-          'location': location_place,
+          'location': location_param,
           'description': des_param,
           'start': {
             'dateTime': '2015-05-28T09:00:00-07:00',
@@ -141,11 +151,10 @@ class PlanningPage(webapp2.RequestHandler):
           },
         }
 
-        event = service.events().insert(calendarId='primary', body=event).execute()
-        print 'Event created: %s' % (event.get('htmlLink'))
+        # event = service.events().insert(calendarId='primary', body=event).execute()
+        # print 'Event created: %s' % (event.get('htmlLink'))
         self.response.headers['Content-Type'] = 'text/html'
         self.response.write(template.render(event))
-
 
 class ContactPage(webapp2.RequestHandler):
     def get(self):
