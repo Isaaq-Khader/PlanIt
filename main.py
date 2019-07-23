@@ -49,6 +49,34 @@ def root_parent():
     '''Allows for strong consistency at the cost of scalability.'''
     return ndb.Key('Parent', 'default_parent')
 
+class CreateEvent(webapp2.RequestHandler):
+    event = {
+      'summary': ndb.StringProperty(),
+      'location': ndb.StringProperty(),
+      'description': ndb.StringProperty(),
+      'start': {
+        'dateTime': '2015-05-28T09:00:00-07:00',
+        'timeZone': 'America/Los_Angeles',
+      },
+      'end': {
+        'dateTime': '2015-05-28T17:00:00-07:00',
+        'timeZone': 'America/Los_Angeles',
+      },
+      'attendees': [
+        {'email': ndb.StringProperty()}
+      ],
+      'reminders': {
+        'useDefault': False,
+        'overrides': [
+          {'method': 'email', 'minutes': 24 * 60},
+          {'method': 'popup', 'minutes': 10},
+        ],
+      },
+    }
+
+event = service.events().insert(calendarId='primary', body=event).execute()
+print 'Event created: %s' % (event.get('htmlLink'))
+
 class Invite(ndb.Model):
     '''A database entry representing a single user.'''
     email = ndb.StringProperty()
