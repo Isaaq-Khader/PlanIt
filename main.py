@@ -140,7 +140,7 @@ class PlanningPage(webapp2.RequestHandler):
             ],
           },
         }
-        #
+
         # event = service.events().insert(calendarId='primary', body=event).execute()
         # print 'Event created: %s' % (event.get('htmlLink'))
         self.response.headers['Content-Type'] = 'text/html'
