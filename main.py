@@ -49,17 +49,37 @@ def root_parent():
     '''Allows for strong consistency at the cost of scalability.'''
     return ndb.Key('Parent', 'default_parent')
 
+class CreateEvent(webapp2.RequestHandler):
+    event = {
+      'summary': nbd.StringProperty(),
+      'location': nbd.StringProperty(),
+      'description': nbd.StringProperty(),
+      'start': {
+        'dateTime': '2015-05-28T09:00:00-07:00',
+        'timeZone': 'America/Los_Angeles',
+      },
+      'end': {
+        'dateTime': '2015-05-28T17:00:00-07:00',
+        'timeZone': 'America/Los_Angeles',
+      },
+      'attendees': [
+        {'email': nbd.StringProperty()}
+      ],
+      'reminders': {
+        'useDefault': False,
+        'overrides': [
+          {'method': 'email', 'minutes': 24 * 60},
+          {'method': 'popup', 'minutes': 10},
+        ],
+      },
+    }
+
+event = service.events().insert(calendarId='primary', body=event).execute()
+print 'Event created: %s' % (event.get('htmlLink'))
+
 class Invite(ndb.Model):
     '''A database entry representing a single user.'''
     email = ndb.StringProperty()
-
-class Event(ndb.Model):
-    '''A database entry representing a single user.'''
-    place = ndb.StringProperty()
-    title = ndb.StringProperty()
-    description = ndb.StringProperty()
-    startTime = ndb.StringProperty()
-    endTime = ndb.StringProperty()
 
 class MainPage(webapp2.RequestHandler):
     @decorator.oauth_required
@@ -102,83 +122,15 @@ class InvitePage(webapp2.RequestHandler):
 
         self.redirect('/invite')
 
-class DayPage(webapp2.RequestHandler):
-    def get(self):
-        template = JINJA_ENVIRONMENT.get_template('templates/day.html')
-        self.response.headers['Content-Type'] = 'text/html'
-        self.response.write(template.render())
+# class DayPage(webapp2.RequestHandler):
+#     def get(self):
+#         template = JINJA_ENVIRONMENT.get_template('templates/day.html')
+#         self.response.headers['Content-Type'] = 'text/html'
+#         self.response.write(template.render())
 
 class PlanningPage(webapp2.RequestHandler):
     def get(self):
         template = JINJA_ENVIRONMENT.get_template('templates/planning.html')
-        sum_param = self.request.get('event_title')
-        location_param = self.request.get('event_place')
-        des_param = self.request.get('event_des')
-        event_start_param = self.request.get('event_start')
-        event_end_param = self.request.get('event_end')
-        event = {
-          'summary': sum_param,
-          'location': event_place,
-          'description': des_param,
-          'start': {
-            'dateTime': '2015-05-28T09:00:00-07:00',
-            'timeZone': 'America/Los_Angeles',
-          },
-          'end': {
-            'dateTime': '2015-05-28T17:00:00-07:00',
-            'timeZone': 'America/Los_Angeles',
-          },
-          'attendees': [
-            {'email': attending_param}
-          ],
-          'reminders': {
-            'useDefault': False,
-            'overrides': [
-              {'method': 'email', 'minutes': 24 * 60},
-              {'method': 'popup', 'minutes': 10},
-            ],
-          },
-        }
-
-        event = service.events().insert(calendarId='primary', body=event).execute()
-        print 'Event created: %s' % (event.get('htmlLink'))
-        self.response.headers['Content-Type'] = 'text/html'
-        self.response.write(template.render())
-
-class Confirmation(webapp2.RequestHandler):
-    def get(self):
-        template = JINJA_ENVIRONMENT.get_template('templates/planning.html')
-        sum_param = self.request.get('event_title')
-        location_param = self.request.get('event_place')
-        des_param = self.request.get('event_des')
-        event_start_param = self.request.get('event_start')
-        event_end_param = self.request.get('event_end')
-        event = {
-          'summary': sum_param,
-          'location': event_place,
-          'description': des_param,
-          'start': {
-            'dateTime': '2015-05-28T09:00:00-07:00',
-            'timeZone': 'America/Los_Angeles',
-          },
-          'end': {
-            'dateTime': '2015-05-28T17:00:00-07:00',
-            'timeZone': 'America/Los_Angeles',
-          },
-          'attendees': [
-            {'email': attending_param}
-          ],
-          'reminders': {
-            'useDefault': False,
-            'overrides': [
-              {'method': 'email', 'minutes': 24 * 60},
-              {'method': 'popup', 'minutes': 10},
-            ],
-          },
-        }
-
-        event = service.events().insert(calendarId='primary', body=event).execute()
-        print 'Event created: %s' % (event.get('htmlLink'))
         self.response.headers['Content-Type'] = 'text/html'
         self.response.write(template.render())
 
@@ -198,33 +150,6 @@ class DeleteInvites(webapp2.RequestHandler):
         # redirect to '/' so that the MainPage.get() handler will run and show
         # the list of dogs.
         self.redirect('/invite')
-
-class DayPage(webapp2.RequestHandler):
-    def get(self):
-        template = JINJA_ENVIRONMENT.get_template('templates/day.html')
-        self.response.headers['Content-Type'] = 'text/html'
-        self.response.write(template.render())
-
-class PlanningPage(webapp2.RequestHandler):
-    def get(self):
-        template = JINJA_ENVIRONMENT.get_template('templates/planning.html')
-        self.response.headers['Content-Type'] = 'text/html'
-        data = {
-            'events': Event.query(ancestor=root_parent()).fetch()
-        }
-        self.response.write(template.render(data))
-    def post(self):
-        new_event = Event(parent=root_parent())
-        new_event.title = self.request.get('event_title')
-        new_event.description = self.request.get('event_des')
-        new_event.place = self.request.get('event_place')
-        new_event.startTime = self.request.get('event_start')
-        new_event.endTime = self.request.get('event_end')
-        new_event.put()
-        # redirect to '/' so that the get() version of this handler will run
-        # and show the list of dogs.
-        self.redirect('/planning')
-
 
 
 # The App Config
