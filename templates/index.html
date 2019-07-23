@@ -5,7 +5,7 @@
    <link rel="stylesheet" href="/css/style.css">
    <link href="https://fonts.googleapis.com/css?family=Indie+Flower|Roboto+Mono&display=swap" rel="stylesheet">
   </head>
-  <body>
+  <body id="mainpage">
 
     <ul id="bullets">
       <li><a href="/"style="color: white;">Home</a></li>
@@ -18,9 +18,11 @@
     <div class="welcome">
 
     <h1 class = "main_header">Welcome to PlanIt</h1>
+
     {% if user %}
     <h1>Hello {{user.email()}}</h1>
     <button class="btn_login"><a href="{{logout_url}}">Logout</a></button>
+
     {% else %}
     <h2 class = "sub_header">Please Login Below</h2>
     <button class="btn_login"><a href="{{login_url}}">Login</a></button>
@@ -34,11 +36,9 @@
         <h1>Why PlanIt</h1>
         <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
       </div>
-
     </div>
     {% endif %}
-  </div>
-
+    </div>
 
 
   </body>
