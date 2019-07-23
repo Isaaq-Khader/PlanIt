@@ -38,6 +38,15 @@ class Invite(ndb.Model):
     '''A database entry representing a single user.'''
     email = ndb.StringProperty()
 
+class Event(ndb.Model):
+    '''A database entry representing a single dog.'''
+    title = ndb.StringProperty()
+    description = ndb.StringProperty()
+    place = ndb.StringProperty()
+    startTime=ndb.StringProperty()
+    endTime=ndb.StringProperty()
+
+
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
@@ -51,9 +60,6 @@ class MainPage(webapp2.RequestHandler):
         }
         self.response.headers['Content-Type'] = 'text/html'
         self.response.write(template.render(data))
-
-
-
 
 
 class InvitePage(webapp2.RequestHandler):
@@ -73,12 +79,6 @@ class InvitePage(webapp2.RequestHandler):
 
                 self.redirect('/invite')
 
-class DayPage(webapp2.RequestHandler):
-    def get(self):
-        template = JINJA_ENVIRONMENT.get_template('templates/day.html')
-        self.response.headers['Content-Type'] = 'text/html'
-        self.response.write(template.render())
-
 class DeleteInvites(webapp2.RequestHandler):
     '''The handler for deleting invites.'''
     def post(self):
@@ -90,11 +90,42 @@ class DeleteInvites(webapp2.RequestHandler):
         # the list of dogs.
         self.redirect('/invite')
 
+class DayPage(webapp2.RequestHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('templates/day.html')
+        self.response.headers['Content-Type'] = 'text/html'
+        self.response.write(template.render())
+
+class EventPage(webapp2.RequestHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('templates/planning.html')
+        self.response.headers['Content-Type'] = 'text/html'
+        data = {
+            'events': Event.query(ancestor=root_parent()).fetch()
+        }
+        self.response.write(template.render(data))
+    def post(self):
+        new_event = Event(parent=root_parent())
+        new_event.title = self.request.get('event_title')
+        new_event.description = self.request.get('event_des')
+        new_event.place = self.request.get('event_place')
+        new_event.startTime = self.request.get('event_start')
+        new_event.endTime = self.request.get('event_end')
+        new_event.put()
+        # redirect to '/' so that the get() version of this handler will run
+        # and show the list of dogs.
+        self.redirect('/planning')
+
+
 
 
 
 # The App Config
 app = webapp2.WSGIApplication([
-    ('/', MainPage), ('/invite', InvitePage), ('/day', DayPage), ('/delete_invites', DeleteInvites)
+    ('/', MainPage),
+    ('/invite', InvitePage),
+    ('/day', DayPage),
+    ('/delete_invites', DeleteInvites),
+    ('/planning', EventPage)
 
 ], debug=True)
