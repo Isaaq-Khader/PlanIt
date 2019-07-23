@@ -4,10 +4,10 @@
  <head>
    <meta charset="utf-8">
    <title>New Event</title>
-   <h1>Okay! Who would you like to invite?</h1>
+   <h1>Add Event: Who would you like to invite?</h1>
      <form method="post">
        <div>
-         Enter: <input type="text" name="email" value="">
+         Enter: <input type="email" name="email" value="">
        </div>
        <input type="submit" name="" value="Invite">
      </form>
@@ -16,6 +16,22 @@
         <input type="submit" name="" value = "continue"</input>
        </form>
      </p>
+     <h1>Current Invites</h1>
+      <form class="" action="/delete_invites" method="post">
+        <table>
+          <tr>
+            <th>Email</th>
+            <th>Delete?</th>
+          </tr>
+          {% for invite in invites %}
+          <tr>
+            <td>{{invite.email}}</td>
+            <td><input type="checkbox" name="to_delete" value="{{invite.key.urlsafe()}}"></td>
+          </tr>
+            {% endfor %}
+        </table>
+          <input type="submit" name="" value="Delete Selected">
+        </form>
 
  </head>
  <body>
