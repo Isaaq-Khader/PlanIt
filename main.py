@@ -64,9 +64,9 @@ class Invite(ndb.Model):
 
 class CreateEvent(webapp2.RequestHandler):
     event = {
-      'summary': self.request.get('event_title'),
-      'location': self.request.get('event_place'),
-      'description':  self.request.get('event_des'),
+      'summary': ndb.StringProperty(),
+      'location': ndb.StringProperty(),
+      'description': ndb.StringProperty(),
       'start': {
         'dateTime': '2015-05-28T09:00:00-07:00',
         'timeZone': 'America/Los_Angeles',
@@ -76,7 +76,7 @@ class CreateEvent(webapp2.RequestHandler):
         'timeZone': 'America/Los_Angeles',
       },
       'attendees': [
-        {'email': nbd.StringProperty()}
+        {'email': ndb.StringProperty()}
       ],
       'reminders': {
         'useDefault': False,
