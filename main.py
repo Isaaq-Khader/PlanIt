@@ -93,10 +93,11 @@ class InvitePage(webapp2.RequestHandler):
             return
         template = JINJA_ENVIRONMENT.get_template('templates/invite.html')
         self.response.headers['Content-Type'] = 'text/html'
+        print event_key
         emails = Invite.query(Invite.event_key == ndb.Key(urlsafe=event_key), ancestor=root_parent()).fetch()
         data = {
             'invites': emails,
-            'event_key': event_key,
+            'invites': Invite.query(ancestor=root_parent()).fetch()
         }
         self.response.write(template.render(data))
 
@@ -140,7 +141,7 @@ class PlanningPage(webapp2.RequestHandler):
             'timeZone': 'America/Los_Angeles',
           },
           'attendees': [
-            {'email': 'attending_param'}
+            {'email': attending_param}
           ],
           'reminders': {
             'useDefault': False,
@@ -166,7 +167,6 @@ class DeleteInvites(webapp2.RequestHandler):
     '''The handler for deleting invites.'''
     def post(self):
         to_delete = self.request.get('to_delete', allow_multiple=True)
-        
         for entry in to_delete:
             key = ndb.Key(urlsafe=entry)
             key.delete()
