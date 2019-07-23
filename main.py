@@ -101,10 +101,13 @@ class InvitePage(webapp2.RequestHandler):
         self.redirect('/invite')
 
 class DayPage(webapp2.RequestHandler):
-     def get(self):
-            template = JINJA_ENVIRONMENT.get_template('templates/day.html')
-            self.response.headers['Content-Type'] = 'text/html'
-            self.response.write(template.render())
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('templates/day.html')
+        self.response.headers['Content-Type'] = 'text/html'
+        data = {
+            'invites': Invite.query(ancestor=root_parent()).fetch()
+        }
+        self.response.write(template.render(data))
 
 class PlanningPage(webapp2.RequestHandler):
     def get(self):
@@ -161,6 +164,25 @@ class DeleteInvites(webapp2.RequestHandler):
         # the list of dogs.
         self.redirect('/invite')
 
+class Confirmation(webapp2.RequestHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('templates/confirmation.html')
+        self.response.headers['Content-Type'] = 'text/html'
+        data = {
+            'invites': Invite.query(ancestor=root_parent()).fetch()
+        }
+        self.response.write(template.render(data))
+
+    def post(self):
+        # INVITIES HAS NOT BEEN TESTED!!!
+        new_invite = Invite(parent=root_parent())
+        invities = CreateEvent(parent=root_parent())
+        new_invite.email = self.request.get('email')
+        invities.attendees.email = self.request.get('email')
+        new_invite.put()
+        invities.put()
+
+        self.redirect('/invite')
 
 # The App Config
 app = webapp2.WSGIApplication([
