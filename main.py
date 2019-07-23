@@ -130,7 +130,7 @@ class PlanningPage(webapp2.RequestHandler):
             'timeZone': 'America/Los_Angeles',
           },
           'attendees': [
-            {'email': attending_param}
+            {'email': 'attending_param'}
           ],
           'reminders': {
             'useDefault': False,
@@ -141,8 +141,8 @@ class PlanningPage(webapp2.RequestHandler):
           },
         }
 
-        event = service.events().insert(calendarId='primary', body=event).execute()
-        print 'Event created: %s' % (event.get('htmlLink'))
+        #event = service.events().insert(calendarId='primary', body=event).execute()
+        #print 'Event created: %s' % (event.get('htmlLink'))
         self.response.headers['Content-Type'] = 'text/html'
         self.response.write(template.render(event))
 
