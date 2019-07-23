@@ -8,6 +8,12 @@
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
+#contactpage {
+  background-image: url("");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
 a {
   color: black;
 }
@@ -21,7 +27,7 @@ a {
 @keyframes bob {
   0%   {background-color:red;
   }
-  25%  {background-color:yellow;
+  25%  {background-color:gold;
   }
   50%  {background-color:blue;
   }
@@ -76,4 +82,8 @@ li {
 }
 li a {
   padding: 10px;
+}
+#contactheader {
+  font-family: 'Indie Flower', cursive;
+  text-align:center;
 }
