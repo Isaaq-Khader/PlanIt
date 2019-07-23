@@ -93,10 +93,10 @@ class InvitePage(webapp2.RequestHandler):
             return
         template = JINJA_ENVIRONMENT.get_template('templates/invite.html')
         self.response.headers['Content-Type'] = 'text/html'
-        print event_key
         emails = Invite.query(Invite.event_key == ndb.Key(urlsafe=event_key), ancestor=root_parent()).fetch()
         data = {
-            'invites': emails
+            'invites': emails,
+            'event_key': event_key,
         }
         self.response.write(template.render(data))
 
