@@ -93,13 +93,10 @@ class InvitePage(webapp2.RequestHandler):
         self.response.write(template.render(data))
 
     def post(self):
-        # INVITIES HAS NOT BEEN TESTED!!!
         new_invite = Invite(parent=root_parent())
-        invities = CreateEvent(parent=root_parent())
         new_invite.email = self.request.get('email')
-        invities.attendees.email = self.request.get('email')
         new_invite.put()
-        invities.put()
+
 
         self.redirect('/invite')
 
@@ -119,7 +116,7 @@ class PlanningPage(webapp2.RequestHandler):
         event_end_param = self.request.get('event_end')
         event = {
           'summary': sum_param,
-          'location': location_place,
+          'location': location_param,
           'description': des_param,
           'start': {
             'dateTime': '2015-05-28T09:00:00-07:00',
@@ -173,7 +170,7 @@ app = webapp2.WSGIApplication([
     ('/delete_invites', DeleteInvites),
     ('/contact',ContactPage),
     ('/planning',PlanningPage),
-    ('confirmation',Confirmation),
+    #('confirmation',Confirmation),
     (decorator.callback_path, decorator.callback_handler()),
 
 ], debug=True)
