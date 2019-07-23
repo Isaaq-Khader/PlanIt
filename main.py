@@ -165,6 +165,7 @@ class DeleteInvites(webapp2.RequestHandler):
     '''The handler for deleting invites.'''
     def post(self):
         to_delete = self.request.get('to_delete', allow_multiple=True)
+        
         for entry in to_delete:
             key = ndb.Key(urlsafe=entry)
             key.delete()

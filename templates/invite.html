@@ -4,7 +4,15 @@
  <head>
    <meta charset="utf-8">
    <title>New Event</title>
-   <h1>Add Event: Who would you like to invite?</h1>
+   <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <h1 align="center">Main Header</h1>
+
+<div class="invite_main_cantainer">
+  
+  <div class="invite_box1">
+   <h1>Add Event:</h1>
      <form method="post">
        <div>
          Enter: <input type="email" name="email" value="">
@@ -13,24 +21,40 @@
       <p>
         <button><a href="http://localhost:8080/day?event_key={{event_key}}">Continue</a></button>
      </p>
-     <h1>Current Invites</h1>
-      <form class="" action="/delete_invites" method="post">
-        <table>
-          <tr>
-            <th>Email</th>
-            <th>Delete?</th>
-          </tr>
-          {% for invite in invites %}
-          <tr>
-            <td>{{invite.email}}</td>
-            <td><input type="checkbox" name="to_delete" value="{{invite.key.urlsafe()}}"></td>
-          </tr>
-            {% endfor %}
-        </table>
-          <input type="submit" name="" value="Delete Selected">
-        </form>
+     </form>
+    </div>
 
-      </head>
+    <div class="invite_box2">
+    <h1>Current Invites</h1>
+     <form class="" action="/delete_invites" method="post">
+       <table>
+         <tr>
+           <th>Email</th>
+           <th>Delete?</th>
+         </tr>
+         {% for invite in invites %}
+         <tr>
+           <td>{{invite.email}}</td>
+           <td><input type="checkbox" name="to_delete" value="{{invite.key.urlsafe()}}"></td>
+         </tr>
+           {% endfor %}
+       </table>
+         <input type="submit" name="" value="Delete Selected">
+       </form>
+     </div>
+        <!-- This page is for choosing what day everyone will hang out -->
+
+        <div id="avalible_days">
+        <h1>avalible days</h1>
+        {% for name in invites %}
+        <p>{{name.email}}</p>
+        {% endfor %}
+        <p>
+          <form action="/planning">
+            <input type="submit" name="" value = "continue"</input>
+          </form>
+        </div>
+</div>
     <body>
  </body>
 </html>
