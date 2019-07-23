@@ -173,6 +173,7 @@ class DeleteInvites(webapp2.RequestHandler):
         # the list of dogs.
         self.redirect('/invite')
 
+
 class Confirmation(webapp2.RequestHandler):
     def get(self):
         template = JINJA_ENVIRONMENT.get_template('templates/confirmation.html')
