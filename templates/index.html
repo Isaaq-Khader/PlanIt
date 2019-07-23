@@ -20,10 +20,10 @@
     <h1 class = "main_header">Welcome to PlanIt</h1>
     {% if user %}
     <h1>Hello {{user.email()}}</h1>
-    <button class="btn_login"><a href="{{logout_url}}">Logout</a></button>
+    <button class="btn_login"><a href="{{login_url}}">Logout</a></button>
     {% else %}
     <h2 class = "sub_header">Please Login Below</h2>
-    <button class="btn_login"><a href="{{login_url}}">Login</a></button>
+    <button class="btn_login"><a href="{{logout_url}}">Login</a></button>
 
     <div class="container">
       <div id="box_1">
