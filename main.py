@@ -49,12 +49,6 @@ def root_parent():
     '''Allows for strong consistency at the cost of scalability.'''
     return ndb.Key('Parent', 'default_parent')
 
-class CreateEvent(webapp2.RequestHandler):
-
-
-    event = service.events().insert(calendarId='primary', body=event).execute()
-    print 'Event created: %s' % (event.get('htmlLink'))
-
 class Invite(ndb.Model):
     '''A database entry representing a single user.'''
     email = ndb.StringProperty()
@@ -117,11 +111,15 @@ class DayPage(webapp2.RequestHandler):
 class PlanningPage(webapp2.RequestHandler):
     def get(self):
         template = JINJA_ENVIRONMENT.get_template('templates/planning.html')
-
+        sum_param = self.request.get('event_title')
+        location_param = self.request.get('event_place')
+        des_param = self.request.get('event_des')
+        event_start_param = self.request.get('event_start')
+        event_end_param = self.request.get('event_end')
         event = {
           'summary': sum_param,
-          'location': 'event_place',
-          'description': desc_param,
+          'location': event_place,
+          'description': des_param,
           'start': {
             'dateTime': '2015-05-28T09:00:00-07:00',
             'timeZone': 'America/Los_Angeles',
@@ -142,8 +140,45 @@ class PlanningPage(webapp2.RequestHandler):
           },
         }
 
-event = service.events().insert(calendarId='primary', body=event).execute()
-print 'Event created: %s' % (event.get('htmlLink'))
+        event = service.events().insert(calendarId='primary', body=event).execute()
+        print 'Event created: %s' % (event.get('htmlLink'))
+        self.response.headers['Content-Type'] = 'text/html'
+        self.response.write(template.render())
+
+class Confirmation(webapp2.RequestHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('templates/planning.html')
+        sum_param = self.request.get('event_title')
+        location_param = self.request.get('event_place')
+        des_param = self.request.get('event_des')
+        event_start_param = self.request.get('event_start')
+        event_end_param = self.request.get('event_end')
+        event = {
+          'summary': sum_param,
+          'location': event_place,
+          'description': des_param,
+          'start': {
+            'dateTime': '2015-05-28T09:00:00-07:00',
+            'timeZone': 'America/Los_Angeles',
+          },
+          'end': {
+            'dateTime': '2015-05-28T17:00:00-07:00',
+            'timeZone': 'America/Los_Angeles',
+          },
+          'attendees': [
+            {'email': attending_param}
+          ],
+          'reminders': {
+            'useDefault': False,
+            'overrides': [
+              {'method': 'email', 'minutes': 24 * 60},
+              {'method': 'popup', 'minutes': 10},
+            ],
+          },
+        }
+
+        event = service.events().insert(calendarId='primary', body=event).execute()
+        print 'Event created: %s' % (event.get('htmlLink'))
         self.response.headers['Content-Type'] = 'text/html'
         self.response.write(template.render())
 
@@ -200,6 +235,7 @@ app = webapp2.WSGIApplication([
     ('/delete_invites', DeleteInvites),
     ('/contact',ContactPage),
     ('/planning',PlanningPage),
+    ('confirmation',Confirmation)
     (decorator.callback_path, decorator.callback_handler()),
 
 ], debug=True)
