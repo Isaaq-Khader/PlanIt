@@ -193,7 +193,7 @@ class DayPage(webapp2.RequestHandler):
         http = decorator.http()
         e = service.events().insert(calendarId='primary', body=event).execute(http=http)
         print 'Event created: %s' % (e.get('htmlLink'))
-        self.redirect('/confirmation?event_key='+event_key)
+        self.redirect('/confirmation?event_key='+Event)
 
 
 class ContactPage(webapp2.RequestHandler):
@@ -206,13 +206,13 @@ class DeleteInvites(webapp2.RequestHandler):
     '''The handler for deleting invites.'''
     def post(self):
         to_delete = self.request.get('to_delete', allow_multiple=True)
-
+        event_key = None
         for entry in to_delete:
             key = ndb.Key(urlsafe=entry)
+            invite=key.get()
+            event_key = invite.event_key
             key.delete()
-        # redirect to '/' so that the MainPage.get() handler will run and show
-        # the list of dogs.
-        self.redirect('/invite')
+        self.redirect('/invite?event_key='+event_key.urlsafe())
 
 class Confirmation(webapp2.RequestHandler):
     def get(self):

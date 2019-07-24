@@ -368,3 +368,11 @@ li a {
    margin: 0px;
    font-family: 'Roboto Mono', monospace;
   }
+
+  #day_page_conatiner {
+    width: 600px;
+    margin: auto;
+    padding: 50px;
+    background-color: rgba(255, 0, 0, 0.5);
+    border-radius: 50px;
+  }
