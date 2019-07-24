@@ -178,6 +178,8 @@ p{
   background-size: cover;
   color:white;
 }
+
+/* THIS THE CONTACT PAGE */
 .contactpage {
   background-image: url("https://i.pinimg.com/originals/8c/ae/dd/8caedd1b34013567eb8ddf6897458767.gif");
  background-color: #202033 ;
@@ -207,6 +209,11 @@ p{
 #input2 {
   width: 100%;
   height:150px;
+}
+
+#send_message {
+  opacity: 0.5;
+  margin-top: 10px;
 }
 
 /* this is the css for the blinking cursor*/
