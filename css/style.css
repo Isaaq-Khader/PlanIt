@@ -1,50 +1,46 @@
-.welcome {
-  text-align: center;
-  color: white;
+a {
+  color: black;
 }
+ul {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+
+}
+li {
+  list-style-type: none;
+  float: left;
+}
+li a {
+  padding: 10px;
+}
+
+p{
+  margin: 0px;
+}
+/* This is only use for the main page */
 #mainpage {
   background-image: url("https://wallpaperaccess.com/full/84291.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
-a {
-  color: black;
-}
-.invite_main_cantainer {
-  justify-content: center;
-  display: flex;
-  padding: 20px;
-
-}
-.main_header {
-  font-size: 60px;
-  margin: 0px;
-  text-transform: capitalize;
-  font-family: 'Indie Flower', cursive;
-}
-#invite_page {
-  background-image: url("http://prtlsmusic.com/wp-content/uploads/2018/11/MollyBurch1920.gif");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
-}
-#avalible_days {
-
-}
 @keyframes bob {
-  0%   {background-color:red;
-
+  0%   {
+    background-color:red;
   }
-  25%  {background-color:yellow;
-
+  25%  {
+    background-color:yellow;
   }
-  50%  {background-color:blue;
+  50%  {
+    background-color:blue;
   }
-  75%  {background-color:green;
+  75%  {
+    background-color:green;
   }
-  100% {background-color:red;}
-
+  100% {b
+    ackground-color:red;
+  }
 }
 .btn_login {
   width: 100px;
@@ -54,9 +50,6 @@ a {
   animation-duration: 5s;
   animation-iteration-count: infinite;
 }
-/* .btn_login:hover {
-  background-color: gold;
-} */
 .sub_header {
   font-family: 'Indie Flower', cursive;
 }
@@ -66,12 +59,16 @@ a {
   display: flex;
   align-items: flex-start;
 }
-#invite_header {
+.welcome {
+  text-align: center;
   color: white;
-  font-size: 50px;
-  margin: 0px;
 }
-
+.main_header {
+  font-size: 60px;
+  margin: 0px;
+  text-transform: capitalize;
+  font-family: 'Indie Flower', cursive;
+}
 #box_1 {
   width: 200px;
   margin-right: 500px;
@@ -87,7 +84,23 @@ a {
   color: white
 }
 
-
+/* This is only use for the invite page */
+#invite_page {
+  background-image: url("http://prtlsmusic.com/wp-content/uploads/2018/11/MollyBurch1920.gif");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+.invite_main_cantainer {
+  justify-content: center;
+  display: flex;
+  padding: 20px;
+}
+#invite_header {
+  color: white;
+  font-size: 50px;
+  margin: 0px;
+}
 @keyframes siham {
   0%  {
     background-color:#78bae3;
@@ -157,21 +170,4 @@ a {
   animation-duration: 10s;
   animation-iteration-count: infinite;
   border-radius: 50px;
-}
-ul {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-
-}
-li {
-  list-style-type: none;
-  float: left;
-}
-li a {
-  padding: 10px;
-}
-
-p{
-  margin: 0px;
 }
