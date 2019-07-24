@@ -63,6 +63,11 @@ class Invite(ndb.Model):
     '''A database entry representing a single user.'''
     email = ndb.StringProperty()
     event_key = ndb.KeyProperty(Event)
+    calenderId = ndb.StringProperty()
+
+#class CalenderIds(ndb.Model):
+    #'''A database entry representing calenderId of each user.'''
+    #calenderId = ndb.StringProperty()
 
 
 class MainPage(webapp2.RequestHandler):
@@ -99,7 +104,7 @@ class InvitePage(webapp2.RequestHandler):
         emails = Invite.query(Invite.event_key == ndb.Key(urlsafe=event_key), ancestor=root_parent()).fetch()
         data = {
             'invites': emails,
-            'invites': Invite.query(ancestor=root_parent()).fetch()
+            'event_key':event_key,
         }
         self.response.write(template.render(data))
 
@@ -107,6 +112,8 @@ class InvitePage(webapp2.RequestHandler):
         new_invite = Invite(parent=root_parent())
         new_invite.email = self.request.get('email')
         new_invite.event_key = ndb.Key(urlsafe=self.request.get('event_key'))
+        #jennifer testimg dont delete
+        #new_invite.calenderId= service.calendars().get(calendarId= self.request.get('email')).execute()
         new_invite.put()
 
         self.redirect('/invite?event_key='+self.request.get('event_key'))
@@ -133,6 +140,7 @@ class DayPage(webapp2.RequestHandler):
                 'email': invite.email
             }
             attendees.append(attendee)
+
 
         sum_param = self.request.get('event_title')
         location_param = self.request.get('event_place')
