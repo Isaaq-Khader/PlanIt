@@ -94,19 +94,13 @@ a {
 @keyframes sally {
   0%  {
     background-image: linear-gradient(orange, yellow);
-
   }
-  25%  {
-
-    background-color:yellow;
-
+  50%  {
+    background-color:blue;
   }
-  50%  {background-color:blue;
+  100% {
+    background-color:red;
   }
-  75%  {background-color:green;
-  }
-  100% {background-color:red;}
-
 }
 .invite_box3{
   margin: 0px;
