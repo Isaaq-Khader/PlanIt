@@ -43,7 +43,7 @@ http = httplib2.Http(memcache)
 service = discovery.build("calendar", "v3", http=http)
 decorator = appengine.oauth2decorator_from_clientsecrets(
     CLIENT_SECRETS,
-    scope='https://www.googleapis.com/auth/calendar.events')
+    scope='https://www.googleapis.com/auth/calendar')
 
 def root_parent():
     '''Allows for strong consistency at the cost of scalability.'''
@@ -100,13 +100,13 @@ class InvitePage(webapp2.RequestHandler):
         data = {
             # 'invites': emails,
             'invites': emails,
+            'event_key': event_key,
         }
         self.response.write(template.render(data))
 
     def post(self):
         new_invite = Invite(parent=root_parent())
         new_invite.email = self.request.get('email')
-
         new_invite.event_key = ndb.Key(urlsafe=self.request.get('event_key'))
         new_invite.put()
 
@@ -117,8 +117,12 @@ class DayPage(webapp2.RequestHandler):
     def get(self):
         template = JINJA_ENVIRONMENT.get_template('templates/day.html')
         self.response.headers['Content-Type'] = 'text/html'
+        event_key = self.request.get('event_key')
+        myKey = ndb.Key(urlsafe=event_key)
+        emails = Invite.query(Invite.event_key == myKey, ancestor=root_parent()).fetch()
         data = {
-            'invites': Invite.query(ancestor=root_parent()).fetch()
+            'invites': emails,
+            'event_key': event_key,
         }
         self.response.write(template.render(data))
     @decorator.oauth_required
@@ -128,7 +132,8 @@ class DayPage(webapp2.RequestHandler):
         attendees = []
         for invite in invites:
             attendee = {
-                'email': invite.email
+                'email': invite.email,
+                'event_key': event_key,
             }
             attendees.append(attendee)
 
