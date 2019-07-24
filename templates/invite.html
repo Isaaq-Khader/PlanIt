@@ -6,6 +6,10 @@
    <title>New Event</title>
    <link rel="stylesheet" href="/css/style.css">
 </head>
+    <ul class="bullets">
+      <li><a href="/"style="color: black;">Home</a></li>
+      <li><a href="/contact"style="color: black;">Contact</a></li>
+    </ul>
 
   <h1 align="center">Main Header</h1>
 
@@ -44,7 +48,7 @@
      </div>
         <!-- This page is for choosing what day everyone will hang out -->
 
-        <div id="avalible_days">
+        <div class="invite_box3">
         <h1>Available Days</h1>
         {% for name in invites %}
         <p>{{name.email}}</p>

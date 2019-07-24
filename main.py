@@ -96,7 +96,7 @@ class InvitePage(webapp2.RequestHandler):
         print event_key
         emails = Invite.query(Invite.event_key == ndb.Key(urlsafe=event_key), ancestor=root_parent()).fetch()
         data = {
-            'invites': emails,
+            # 'invites': emails,
             'invites': Invite.query(ancestor=root_parent()).fetch()
         }
         self.response.write(template.render(data))
@@ -104,6 +104,7 @@ class InvitePage(webapp2.RequestHandler):
     def post(self):
         new_invite = Invite(parent=root_parent())
         new_invite.email = self.request.get('email')
+
         new_invite.event_key = ndb.Key(urlsafe=self.request.get('event_key'))
         new_invite.put()
 
@@ -111,13 +112,10 @@ class InvitePage(webapp2.RequestHandler):
 
 class DayPage(webapp2.RequestHandler):
     def get(self):
-        event_key = self.request.get('event_key')
         template = JINJA_ENVIRONMENT.get_template('templates/day.html')
         self.response.headers['Content-Type'] = 'text/html'
-        emails = Invite.query(Invite.event_key == ndb.Key(urlsafe=event_key), ancestor=root_parent()).fetch()
         data = {
-            'invites': emails,
-            'event_key': event_key,
+            'invites': Invite.query(ancestor=root_parent()).fetch()
         }
         self.response.write(template.render(data))
 
@@ -168,15 +166,13 @@ class ContactPage(webapp2.RequestHandler):
 class DeleteInvites(webapp2.RequestHandler):
     '''The handler for deleting invites.'''
     def post(self):
-        event_key = self.request.get('event_key')
         to_delete = self.request.get('to_delete', allow_multiple=True)
         for entry in to_delete:
             key = ndb.Key(urlsafe=entry)
             key.delete()
         # redirect to '/' so that the MainPage.get() handler will run and show
         # the list of dogs.
-        self.redirect('/invite?event_key='+event_key)
-
+        self.redirect('/invite')
 
 class Confirmation(webapp2.RequestHandler):
     def get(self):
