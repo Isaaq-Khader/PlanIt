@@ -171,3 +171,12 @@ p{
   animation-iteration-count: infinite;
   border-radius: 50px;
 }
+
+/* This is the day.html css */
+.day_page {
+  background-image: url("https://i.gifer.com/ul.gif");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  color:white;
+}
