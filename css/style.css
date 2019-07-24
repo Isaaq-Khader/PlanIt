@@ -135,7 +135,6 @@ p{
   }
 }
 .invite_box1 {
-  margin: 0px;
   padding-left: 100px;
   padding-right: 100px;
   background: blue;
@@ -147,8 +146,6 @@ p{
   border-radius: 50px;
 }
 .invite_box2 {
-  margin-right: 30px;
-  margin-left: 30px;
   padding-left: 100px;
   padding-right: 100px;
   background: red;
@@ -160,11 +157,12 @@ p{
   border-radius: 50px;
 }
 
-.invite_box3{
-  margin: 0px;
+.invite_box3 {
+  margin-left: 20px;
+  margin-right: 20px;
   padding-left: 100px;
   padding-right: 100px;
-  font-family: 'Titillium Web', sans-serif;ß
+  font-family: 'Titillium Web', sans-serif;
   background-color:red;
   animation-name: nate;
   animation-duration: 10s;

@@ -98,7 +98,7 @@ class InvitePage(webapp2.RequestHandler):
         print event_key
         emails = Invite.query(Invite.event_key == ndb.Key(urlsafe=event_key), ancestor=root_parent()).fetch()
         data = {
-            # 'invites': emails,
+            # 'invites': Invite.query(ancestor=root_parent()).fetch(),
             'invites': emails,
         }
         self.response.write(template.render(data))
