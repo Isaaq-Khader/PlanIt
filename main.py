@@ -186,10 +186,12 @@ class DayPage(webapp2.RequestHandler):
         # except client.AccessTokenRefreshError:
         #     self.redirect(decorator.authorize_url())
 
+
         http = decorator.http()
         e = service.events().insert(calendarId='primary', body=event).execute(http=http)
         print 'Event created: %s' % (e.get('htmlLink'))
         self.redirect('/confirmation?event_key='+event_key)
+
 
 class ContactPage(webapp2.RequestHandler):
     def get(self):
