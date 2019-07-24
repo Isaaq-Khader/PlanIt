@@ -10,14 +10,20 @@
   </head>
 
   <body class = "contactpage">
+    <ul class="bullets">
+      <li><a href="/"style="color: white;">Home</a></li>
+      <li><a href="/invite"style="color: white;">Invite</a></li>
+    </ul>
     <h1 id = "contactheader"> Contact Us </h1>
-    <p id="contactsummary"> Get to know us or leave us a message <span class="blinking-cursor">|</span> </p>
-
+    <p id="contactsummary"> Get to know us & leave us a message <span class="blinking-cursor">|</span> </p>
+  <div id = "contactform">
   <form>
-     Subject: <input type = "text" name = "subject_line"/>
-     Message: <input type = "text" name = "user_message"/>
-     Email 
-
+    <span id ="form_text1"> Subject: </span> <input id = "input1" type = "text" name = "subject_line"/>
+     <br>
+     <span id = "form_text2"> Message: </span> <input id = "input2" type = "text" name = "user_message"/>
+     </br>
+       <input id = "send_message" type="submit" name="" value="Send Message">
   </form>
+  </div>
   </body>
 </html>

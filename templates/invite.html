@@ -5,27 +5,35 @@
    <meta charset="utf-8">
    <title>New Event</title>
    <link rel="stylesheet" href="/css/style.css">
+   <link href="https://fonts.googleapis.com/css?family=Titillium+Web&display=swap" rel="stylesheet">
+
 </head>
+<body id="invite_page">
+    <ul class="bullets">
+      <li><a href="/"style="color: white;">Home</a></li>
+      <li><a href="/contact"style="color: white;">Contact</a></li>
+    </ul>
 
-  <h1 align="center">Main Header</h1>
+    <h1 align="center" id="invite_header">Invite Friends</h1>
 
-<div class="invite_main_cantainer">
+    <div class="invite_main_cantainer">
 
-  <div class="invite_box1">
-   <h1>Add Event:</h1>
-     <form method="post">
-       <div>
-         Enter: <input type="email" name="email" value="">
-       </div>
-        <input type="submit" name="" value="Invite">
-      <p>
-        <button><a href="/day?event_key={{event_key}}">Continue</a></button>
-     </p>
-     </form>
+    <div class="invite_box1">
+        <h1>Add Event:</h1>
+        <form method="post">
+          <div>
+            Enter: <input type="email" name="email" value="">
+          </div>
+          <input type="submit" name="" value="Invite">
+          <p>
+            <button><a href="/day?event_key={{event_key}}">Continue</a></button>
+          </p>
+        </form>
     </div>
 
     <div class="invite_box2">
     <h1>Current Invites</h1>
+
      <form class="" action="/delete_invites" method="post">
        <table>
          <tr>
@@ -37,21 +45,20 @@
            <td>{{invite.email}}</td>
            <td><input type="checkbox" name="to_delete" value="{{invite.key.urlsafe()}}"></td>
          </tr>
-           {% endfor %}
+         {% endfor %}
        </table>
          <input type="submit" name="" value="Delete Selected">
-       </form>
+      </form>
      </div>
         <!-- This page is for choosing what day everyone will hang out -->
 
-        <div id="avalible_days">
-        <h1>Available Days</h1>
-        {% for name in invites %}
-        <p>{{name.email}}</p>
+     <div class="invite_box3">
+      <h1>Available Days</h1>
+      {% for name in invites %}
+      <p>{{name.email}}</p>
         {% endfor %}
-        <p>
-        </div>
+     </div>
 </div>
-    <body>
+
  </body>
 </html>

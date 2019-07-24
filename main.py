@@ -43,7 +43,7 @@ http = httplib2.Http(memcache)
 service = discovery.build("calendar", "v3", http=http)
 decorator = appengine.oauth2decorator_from_clientsecrets(
     CLIENT_SECRETS,
-    scope='https://www.googleapis.com/auth/calendar.events')
+    scope='https://www.googleapis.com/auth/calendar')
 
 def root_parent():
     '''Allows for strong consistency at the cost of scalability.'''
@@ -103,6 +103,7 @@ class InvitePage(webapp2.RequestHandler):
         print event_key
         emails = Invite.query(Invite.event_key == ndb.Key(urlsafe=event_key), ancestor=root_parent()).fetch()
         data = {
+            # 'invites': emails,
             'invites': emails,
             'event_key':event_key,
         }
@@ -121,10 +122,11 @@ class InvitePage(webapp2.RequestHandler):
 class DayPage(webapp2.RequestHandler):
     @decorator.oauth_required
     def get(self):
-        event_key = self.request.get('event_key')
         template = JINJA_ENVIRONMENT.get_template('templates/day.html')
         self.response.headers['Content-Type'] = 'text/html'
-        emails = Invite.query(Invite.event_key == ndb.Key(urlsafe=event_key), ancestor=root_parent()).fetch()
+        event_key = self.request.get('event_key')
+        myKey = ndb.Key(urlsafe=event_key)
+        emails = Invite.query(Invite.event_key == myKey, ancestor=root_parent()).fetch()
         data = {
             'invites': emails,
             'event_key': event_key,
@@ -137,7 +139,8 @@ class DayPage(webapp2.RequestHandler):
         attendees = []
         for invite in invites:
             attendee = {
-                'email': invite.email
+                'email': invite.email,
+                'event_key': event_key,
             }
             attendees.append(attendee)
 
@@ -210,7 +213,6 @@ class ContactPage(webapp2.RequestHandler):
 class DeleteInvites(webapp2.RequestHandler):
     '''The handler for deleting invites.'''
     def post(self):
-        event_key = self.request.get('event_key')
         to_delete = self.request.get('to_delete', allow_multiple=True)
 
         for entry in to_delete:
@@ -218,8 +220,7 @@ class DeleteInvites(webapp2.RequestHandler):
             key.delete()
         # redirect to '/' so that the MainPage.get() handler will run and show
         # the list of dogs.
-        self.redirect('/invite?event_key='+event_key)
-
+        self.redirect('/invite')
 
 class Confirmation(webapp2.RequestHandler):
     def get(self):
