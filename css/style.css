@@ -23,6 +23,12 @@ a {
   text-transform: capitalize;
   font-family: 'Indie Flower', cursive;
 }
+#invite_page {
+  background-image: url("http://prtlsmusic.com/wp-content/uploads/2018/11/MollyBurch1920.gif");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
 #avalible_days {
 
 }
@@ -60,6 +66,11 @@ a {
   display: flex;
   align-items: flex-start;
 }
+#invite_header {
+  color: white;
+  font-size: 50px;
+  margin: 0px;
+}
 
 #box_1 {
   width: 200px;
@@ -76,39 +87,74 @@ a {
   color: white
 }
 
-.invite_box2 {
-  margin: 0px;
-  padding-left: 100px;
-  padding-right: 100px;
-  background: red;
-  border-radius: 50px;
-}
 
+@keyframes siham {
+  0%  {
+    background-color:#78bae3;
+  }
+  50%  {
+    background-color:#ebf5f5;
+  }
+  100% {
+    background-color:#78bae3;
+  }
+}
+@keyframes andy {
+  0%  {
+    background-color:#78bae3;
+  }
+  50%  {
+    background-color:#ebf5f5;
+  }
+  100% {
+    background-color:#78bae3;
+  }
+}
+@keyframes nate {
+  0%  {
+    background-color:#78bae3;
+  }
+  50%  {
+    background-color:#ebf5f5;
+  }
+  100% {
+    background-color:#78bae3;
+  }
+}
 .invite_box1 {
   margin: 0px;
   padding-left: 100px;
   padding-right: 100px;
   background: blue;
   border-radius: 50px;
+  font-family: 'Titillium Web', sans-serif;
+  animation-name: andy;
+  animation-duration: 8s;
+  animation-iteration-count: infinite;
+  border-radius: 50px;
 }
-@keyframes sally {
-  0%  {
-    background-image: linear-gradient(orange, yellow);
-  }
-  50%  {
-    background-color:blue;
-  }
-  100% {
-    background-color:red;
-  }
+.invite_box2 {
+  margin-right: 30px;
+  margin-left: 30px;
+  padding-left: 100px;
+  padding-right: 100px;
+  background: red;
+  border-radius: 50px;
+  font-family: 'Titillium Web', sans-serif;
+  animation-name: siham;
+  animation-duration: 9s;
+  animation-iteration-count: infinite;
+  border-radius: 50px;
 }
+
 .invite_box3{
   margin: 0px;
   padding-left: 100px;
   padding-right: 100px;
-  background-image: linear-gradient(orange, yellow);
-  animation-name: sally;
-  animation-duration: 5s;
+  font-family: 'Titillium Web', sans-serif;ß
+  background-color:red;
+  animation-name: nate;
+  animation-duration: 10s;
   animation-iteration-count: infinite;
   border-radius: 50px;
 }
