@@ -233,6 +233,8 @@ class DayPage(webapp2.RequestHandler):
                 if time_hr > 12:
                     time_hr = time_hr - 12
                     time_ending = "PM"
+                elif time_hr == 12:
+                    time_ending = "PM"
                 else:
                     time_ending = "AM"
 
@@ -306,6 +308,7 @@ class DayPage(webapp2.RequestHandler):
 
         myKey = ndb.Key(urlsafe=event_key)
         emails = Invite.query(Invite.event_key == myKey, ancestor=root_parent()).fetch()
+
         data = {
             'invites': emails,
             'event_key': event_key,
