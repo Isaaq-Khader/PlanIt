@@ -128,8 +128,10 @@ class DayPage(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('templates/day.html')
         self.response.headers['Content-Type'] = 'text/html'
         event_key = self.request.get('event_key')
-        dateTimeStart = "2019-07-24T01:00:00-05:00"
-        dateTimeEnd = "2019-07-24T23:00:00-05:00"
+        # dateTimeStart and dateTimeEnd must be for that certain day. So for example it is already set up
+        # to be set for the day July 24th, 2019
+        dateTimeStart = "2019-07-24T00:00:00-05:00"
+        dateTimeEnd = "2019-07-24T23:59:00-05:00"
         getCalendar = {
           "timeMin": dateTimeStart,
           "timeMax": dateTimeEnd,
@@ -143,7 +145,6 @@ class DayPage(webapp2.RequestHandler):
         http = decorator.http()
         busy = service.freebusy().query(body=getCalendar).execute(http=http)
 
-            print end_time
         #this allows pulls in data by each day
 
             # need to convert time to show other time besides what is considered "busy"
@@ -181,39 +182,49 @@ class DayPage(webapp2.RequestHandler):
                 start = str(start_int) + start_time[rest_of_time] + " " + start_ending
                 end = str(end_int) + end_time[rest_of_time] + " " + end_ending
 
-                avalible = "12:00 AM - "+ start + "   " + end + " - 11:59 PM"
-                print avalible
+                availability = "12:00 AM - "+ start + "   " + end + " - 11:59 PM"
+                print availability
 
         elif len(busy['calendars']['primary']['busy']) > 1:
             times = []
+            dates = []
             time = slice(11,16)
             hr = slice(2)
             min = slice(3,6)
+            getDate = slice(10)
+
 
             for e in busy['calendars']['primary']['busy']:
                 start =  e['start']
                 end = e['end']
-                print start
-                print end
 
+                start_date = start[getDate]
+                end_date = end[getDate]
                 start_time = start[time]
                 end_time = end[time]
 
-                print start_time
-                print end_time
+                dates.append(start_date)
+                dates.append(end_date)
 
                 times.append(start_time)
                 times.append(end_time)
 
             print times
+            print dates
 
             counter = 0
             end_counter = len(times)
+
             for time in times:
                 # gives integer versions of the times for conversation purposes
                 time_hr = int(time[hr])
                 time_min = int(time[min])
-                print time_min
+                if counter != 0:
+                    end_date = dates[counter - 1]
+                    start_date = dates[counter]
+                    print "start:",start_date
+                    print "end:",end_date
+
                 # conversion to show in 12 hour time format
                 if time_hr > 12:
                     time_hr = time_hr - 12
@@ -227,6 +238,18 @@ class DayPage(webapp2.RequestHandler):
                     time_conversion = str(time_hr) + ":" + str(time_min) + " " + time_ending
                 if counter == 0:
                     time_range = "12:00 AM - " + time_conversion
+                elif start_date != end_date:
+                        # runs if the counter is odd
+                        if counter % 2 == 1:
+                            time_range = time_range + "   " + time_conversion + " (" + start_date + ")" + " - "
+                            print "it ran!!!"
+                        # elif runs if the counter is even
+                        elif counter % 2 == 0:
+                            time_range = time_range + time_conversion + " (" + start_date + ")"
+                            print "it ran!!!"
+                        else:
+                            time_range = time_range + time_conversion
+
                 elif counter == end_counter - 1:
                     time_range = time_range + "   " + time_conversion + " - 11:59 PM"
                 # elif runs if counter is odd
@@ -241,7 +264,9 @@ class DayPage(webapp2.RequestHandler):
                     time_range = time_range + time_conversion
                 counter = counter + 1
 
-                # V This is used to test if the print is working
+                # This is used to test if the print is working
+                # |
+                # V
                 # print time_range
                 # print "Counter % 2 ==",counter % 2
                 # print "Counter: ",counter
