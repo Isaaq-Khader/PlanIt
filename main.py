@@ -218,7 +218,7 @@ class MainPage(webapp2.RequestHandler):
             if decorator.has_credentials():
                 new_user= UserCalender(parent=root_parent())
                 new_user.email=user.email
-                for i in range 
+                for i in range
                 new_user.avaliable= time_range
                 new_user.put()
 
@@ -302,6 +302,201 @@ class DayPage(webapp2.RequestHandler):
         # dateTimeStart and dateTimeEnd must be for that certain day. So for example it is already set up
         # to be set for the day July 24th, 2019
 
+        date_object = datetime.today()
+        print(date_object)
+
+        dateTimeStart = "2019-07-24T00:00:00-05:00"
+        dateTimeEnd = "2019-07-24T23:59:00-05:00"
+        getCalendar = {
+          "timeMin": dateTimeStart,
+          "timeMax": dateTimeEnd,
+          "timeZone": "UTC",
+          "items": [
+            {
+              "id": "primary"
+            }
+          ]
+        }
+        http = decorator.http()
+        busy = service.freebusy().query(body=getCalendar).execute(http=http)
+
+        #this allows pulls in data by each day
+
+            # need to convert time to show other time besides what is considered "busy"
+        if len(busy['calendars']['primary']['busy']) == 1:
+            for e in busy['calendars']['primary']['busy']:
+                start =  e['start']
+                end = e['end']
+
+                getDate = slice(10)
+                start_date = start[getDate]
+                end_date = end[getDate]
+
+                getTime = slice(11,19)
+                start_time = start[getTime]
+                end_time = end[getTime]
+
+                hr = slice(2)
+                rest_of_time = slice(2,5)
+
+                start_int = int(start_time[hr])
+                end_int = int(end_time[hr])
+
+                if start_int > 12:
+                    start_int = start_int - 12
+                    start_ending = "PM"
+                elif start_int == 12:
+                    start_ending = "PM"
+                else:
+                    start_ending = "AM"
+
+                if end_int > 12:
+                    end_int = end_int - 12
+                    end_ending = "PM"
+                elif end_int == 12:
+                    end_ending = "PM"
+                else:
+                    end_ending = "AM"
+
+                start = str(start_int) + start_time[rest_of_time] + " " + start_ending
+                end = str(end_int) + end_time[rest_of_time] + " " + end_ending
+
+                availability = "12:00 AM - "+ start + "   " + end + " - 11:59 PM"
+                print availability
+
+        elif len(busy['calendars']['primary']['busy']) > 1:
+            times = []
+            dates = []
+            time = slice(11,16)
+            hr = slice(2)
+            min = slice(3,6)
+            day_slice = slice(8,10)
+            getDate = slice(10)
+
+
+            for e in busy['calendars']['primary']['busy']:
+                start =  e['start']
+                end = e['end']
+
+                start_date = start[getDate]
+                end_date = end[getDate]
+                start_time = start[time]
+                end_time = end[time]
+
+                dates.append(start_date)
+                dates.append(end_date)
+
+                times.append(start_time)
+                times.append(end_time)
+                counter = 0
+                end_counter = len(times)
+
+            hrs_into_min = []
+            hrs_into_min2 = [600,780,900]
+
+            for time in times:
+                # gives integer versions of the times for conversation purposes
+                time_hr = int(time[hr])
+                ctime_hr = time_hr * 60
+                time_min = int(time[min])
+                ctime_min = ctime_hr + time_min
+                hrs_into_min.append(ctime_min)
+                print hrs_into_min
+
+                if counter != 0:
+                    current_date = dates[counter]
+                    previous_date = dates[counter - 1]
+                    current_day = int(current_date[day_slice])
+                    initial_date = dates[0]
+                    initial_day = int(initial_date[day_slice])
+
+                # conversion to show in 12 hour time format
+                if time_hr > 12:
+                    time_hr = time_hr - 12
+                    time_ending = "PM"
+                elif time_hr == 12:
+                    time_ending = "PM"
+                else:
+                    time_ending = "AM"
+
+                if time_min == 0:
+                    time_conversion = str(time_hr) + ":" + "00" + " " + time_ending
+                else:
+                    time_conversion = str(time_hr) + ":" + str(time_min) + " " + time_ending
+
+                if counter == 0:
+                    time_range = "12:00 AM - " + time_conversion
+                elif current_day != initial_day:
+                    if current_date != previous_date:
+                        time_range = time_range + "11:59 PM"
+                elif counter == end_counter - 1:
+                    time_range = time_range + "   " + time_conversion + " - 11:59 PM"
+                # elif runs if counter is odd
+                elif counter % 2 == 1:
+                    time_range = time_range + "   " + time_conversion + " - "
+                # elif runs if the counter is even
+                elif counter % 2 == 0:
+                    time_range = time_range + time_conversion
+                # elif counter%2 == 0:
+                #     time_range = time_range + time + " - "
+                else:
+                    time_range = time_range + time_conversion
+                counter = counter + 1
+
+                # This is used to test if the print is working
+                # |
+                # V
+                # print time_range
+                # print "Counter % 2 ==",counter % 2
+                # print "Counter: ",counter
+
+
+            print time_range # This displays the final time range in which someone is free
+
+
+            # elif start_date != end_date:
+            #     hr = slice(2)
+            #     rest_of_time = slice(2,5)
+            #
+            #     start_int = int(start_time[hr])
+            #     end_int = int(end_time[hr])
+            #
+            #     if start_int > 12:
+            #         start_int = start_int - 12
+            #         start_ending = "PM"
+            #     elif start_int == 0:
+            #         start_int = 12
+            #         start_ending = "AM"
+            #     else:
+            #         start_ending = "AM"
+            #
+            #     if end_int > 12:
+            #         end_int = end_int - 12
+            #         end_ending = "PM"
+            #     elif end_int == 0:
+            #         end_int = 12
+            #         end_ending = "AM"
+            #     else:
+            #         end_ending = "AM"
+            #
+            #     start = str(start_int) + start_time[rest_of_time] + " " + start_ending
+            #     end = str(end_int) + end_time[rest_of_time] + " " + end_ending
+            #
+            #     avaliable = "12:00 AM - " + start + " (" + start_date + ") - " + end + " (" + end_date + ")"
+            #     print avaliable
+            # else:
+            #     print("Uh oh!")
+
+
+        # if max - other_time > 0:
+        #     other_time = end_time
+        #     print end_time
+        # if max - other_time == 0:
+        #     max = end_time
+        #     print end_time
+        # if max - other_time < 0:
+        #     max = end_time
+        #     print end_time
         myKey = ndb.Key(urlsafe=event_key)
         emails = Invite.query(Invite.event_key == myKey, ancestor=root_parent()).fetch()
 
