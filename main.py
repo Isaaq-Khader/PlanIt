@@ -191,6 +191,7 @@ class DayPage(webapp2.RequestHandler):
             time = slice(11,16)
             hr = slice(2)
             min = slice(3,6)
+            day_slice = slice(8,10)
             getDate = slice(10)
 
 
@@ -208,22 +209,19 @@ class DayPage(webapp2.RequestHandler):
 
                 times.append(start_time)
                 times.append(end_time)
-
-            print times
-            print dates
-
-            counter = 0
-            end_counter = len(times)
+                counter = 0
+                end_counter = len(times)
 
             for time in times:
                 # gives integer versions of the times for conversation purposes
                 time_hr = int(time[hr])
                 time_min = int(time[min])
                 if counter != 0:
-                    end_date = dates[counter - 1]
-                    start_date = dates[counter]
-                    print "start:",start_date
-                    print "end:",end_date
+                    current_date = dates[counter]
+                    previous_date = dates[counter - 1]
+                    current_day = int(current_date[day_slice])
+                    initial_date = dates[0]
+                    initial_day = int(initial_date[day_slice])
 
                 # conversion to show in 12 hour time format
                 if time_hr > 12:
@@ -236,20 +234,12 @@ class DayPage(webapp2.RequestHandler):
                     time_conversion = str(time_hr) + ":" + "00" + " " + time_ending
                 else:
                     time_conversion = str(time_hr) + ":" + str(time_min) + " " + time_ending
+
                 if counter == 0:
                     time_range = "12:00 AM - " + time_conversion
-                elif start_date != end_date:
-                        # runs if the counter is odd
-                        if counter % 2 == 1:
-                            time_range = time_range + "   " + time_conversion + " (" + start_date + ")" + " - "
-                            print "it ran!!!"
-                        # elif runs if the counter is even
-                        elif counter % 2 == 0:
-                            time_range = time_range + time_conversion + " (" + start_date + ")"
-                            print "it ran!!!"
-                        else:
-                            time_range = time_range + time_conversion
-
+                elif current_day != initial_day:
+                    if current_date != previous_date:
+                        time_range = time_range + "11:59 PM"
                 elif counter == end_counter - 1:
                     time_range = time_range + "   " + time_conversion + " - 11:59 PM"
                 # elif runs if counter is odd
