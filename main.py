@@ -24,6 +24,9 @@ import webapp2
 import jinja2
 import os
 import pickle
+import datetime
+import logging
+import json
 
 from google.appengine.api import users
 from googleapiclient import discovery
@@ -118,6 +121,39 @@ class DayPage(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('templates/day.html')
         self.response.headers['Content-Type'] = 'text/html'
         event_key = self.request.get('event_key')
+        dateTimeStart = "2019-07-24T01:00:00-05:00"
+        dateTimeEnd = "2019-07-24T23:00:00-05:00"
+        getCalendar = {
+          "timeMin": dateTimeStart,
+          "timeMax": dateTimeEnd,
+          "timeZone": "UTC",
+          "items": [
+            {
+              "id": "primary"
+            }
+          ]
+        }
+        http = decorator.http()
+        busy = service.freebusy().query(body=getCalendar).execute(http=http)
+
+        for e in busy['calendars']['primary']['busy']:
+            start =  e['start']
+            end = e['end']
+
+            getDate = slice(10)
+            start_date = start[getDate]
+            end_date = end[getDate]
+
+            print start_date
+            print end_date
+
+            getTime = slice(12,19)
+            start_time = start[getTime]
+            end_time = end[getTime]
+
+            print start_time
+            print end_time
+
         myKey = ndb.Key(urlsafe=event_key)
         emails = Invite.query(Invite.event_key == myKey, ancestor=root_parent()).fetch()
         data = {
@@ -125,6 +161,8 @@ class DayPage(webapp2.RequestHandler):
             'event_key': event_key,
         }
         self.response.write(template.render(data))
+
+
     @decorator.oauth_required
     def post(self):
         event_key = self.request.get('event_key')
