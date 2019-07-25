@@ -27,6 +27,9 @@ import pickle
 import datetime
 import logging
 import json
+from datetime import date
+from datetime import time
+from datetime import datetime
 
 from google.appengine.api import users
 from googleapiclient import discovery
@@ -136,6 +139,10 @@ class DayPage(webapp2.RequestHandler):
         event_key = self.request.get('event_key')
         # dateTimeStart and dateTimeEnd must be for that certain day. So for example it is already set up
         # to be set for the day July 24th, 2019
+
+        date_object = datetime.today()
+        print(date_object)
+
         dateTimeStart = "2019-07-24T00:00:00-05:00"
         dateTimeEnd = "2019-07-24T23:59:00-05:00"
         getCalendar = {
@@ -176,11 +183,15 @@ class DayPage(webapp2.RequestHandler):
                 if start_int > 12:
                     start_int = start_int - 12
                     start_ending = "PM"
+                elif start_int == 12:
+                    start_ending = "PM"
                 else:
                     start_ending = "AM"
 
                 if end_int > 12:
                     end_int = end_int - 12
+                    end_ending = "PM"
+                elif end_int == 12:
                     end_ending = "PM"
                 else:
                     end_ending = "AM"
@@ -218,10 +229,18 @@ class DayPage(webapp2.RequestHandler):
                 counter = 0
                 end_counter = len(times)
 
+            hrs_into_min = []
+            hrs_into_min2 = [600,780,900]
+
             for time in times:
                 # gives integer versions of the times for conversation purposes
                 time_hr = int(time[hr])
+                ctime_hr = time_hr * 60
                 time_min = int(time[min])
+                ctime_min = ctime_hr + time_min
+                hrs_into_min.append(ctime_min)
+                print hrs_into_min
+
                 if counter != 0:
                     current_date = dates[counter]
                     previous_date = dates[counter - 1]
@@ -306,6 +325,16 @@ class DayPage(webapp2.RequestHandler):
             # else:
             #     print("Uh oh!")
 
+
+        # if max - other_time > 0:
+        #     other_time = end_time
+        #     print end_time
+        # if max - other_time == 0:
+        #     max = end_time
+        #     print end_time
+        # if max - other_time < 0:
+        #     max = end_time
+        #     print end_time
         myKey = ndb.Key(urlsafe=event_key)
         emails = Invite.query(Invite.event_key == myKey, ancestor=root_parent()).fetch()
 
