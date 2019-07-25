@@ -66,6 +66,11 @@ class Invite(ndb.Model):
     '''A database entry representing a single user.'''
     email = ndb.StringProperty()
     event_key = ndb.KeyProperty(Event)
+    calenderId = ndb.StringProperty()
+
+#class CalenderIds(ndb.Model):
+    #'''A database entry representing calenderId of each user.'''
+    #calenderId = ndb.StringProperty()
 
 
 class MainPage(webapp2.RequestHandler):
@@ -101,9 +106,9 @@ class InvitePage(webapp2.RequestHandler):
         print event_key
         emails = Invite.query(Invite.event_key == ndb.Key(urlsafe=event_key), ancestor=root_parent()).fetch()
         data = {
-            # 'invites': emails,
+            # 'invites': Invite.query(ancestor=root_parent()).fetch(),
             'invites': emails,
-            'event_key': event_key,
+            'event_key':event_key,
         }
         self.response.write(template.render(data))
 
@@ -111,6 +116,8 @@ class InvitePage(webapp2.RequestHandler):
         new_invite = Invite(parent=root_parent())
         new_invite.email = self.request.get('email')
         new_invite.event_key = ndb.Key(urlsafe=self.request.get('event_key'))
+        #jennifer testimg dont delete
+        #new_invite.calenderId= service.calendars().get(calendarId= self.request.get('email')).execute()
         new_invite.put()
 
         self.redirect('/invite?event_key='+self.request.get('event_key'))
@@ -175,6 +182,7 @@ class DayPage(webapp2.RequestHandler):
             }
             attendees.append(attendee)
 
+
         sum_param = self.request.get('event_title')
         location_param = self.request.get('event_place')
         des_param = self.request.get('event_des')
@@ -231,7 +239,7 @@ class DayPage(webapp2.RequestHandler):
         http = decorator.http()
         e = service.events().insert(calendarId='primary', body=event).execute(http=http)
         print 'Event created: %s' % (e.get('htmlLink'))
-        self.redirect('/confirmation?event_key='+event_key)
+        self.redirect('/confirmation?event_key='+Event)
 
 
 class ContactPage(webapp2.RequestHandler):
@@ -244,13 +252,13 @@ class DeleteInvites(webapp2.RequestHandler):
     '''The handler for deleting invites.'''
     def post(self):
         to_delete = self.request.get('to_delete', allow_multiple=True)
-
+        event_key = None
         for entry in to_delete:
             key = ndb.Key(urlsafe=entry)
+            invite=key.get()
+            event_key = invite.event_key
             key.delete()
-        # redirect to '/' so that the MainPage.get() handler will run and show
-        # the list of dogs.
-        self.redirect('/invite')
+        self.redirect('/invite?event_key='+event_key.urlsafe())
 
 class Confirmation(webapp2.RequestHandler):
     def get(self):
