@@ -190,6 +190,7 @@ class MainPage(webapp2.RequestHandler):
                     time_conversion = str(time_hr) + ":" + "00" + " " + time_ending
                 else:
                     time_conversion = str(time_hr) + ":" + str(time_min) + " " + time_ending
+
                 if counter == 0:
                     time_range = "12:00 AM - " + time_conversion
                 elif current_day != initial_day:
@@ -303,6 +304,7 @@ class DayPage(webapp2.RequestHandler):
 
         myKey = ndb.Key(urlsafe=event_key)
         emails = Invite.query(Invite.event_key == myKey, ancestor=root_parent()).fetch()
+
         data = {
             'invites': emails,
             'event_key': event_key,
