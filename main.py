@@ -68,10 +68,11 @@ class Invite(ndb.Model):
 #class CalenderIds(ndb.Model):
     #'''A database entry representing calenderId of each user.'''
     #calenderId = ndb.StringProperty()
-
+def importCalender():
+    print 'Calender imported'
 
 class MainPage(webapp2.RequestHandler):
-
+    @decorator.oauth_aware
     def get(self):
         user = users.get_current_user()
         template = JINJA_ENVIRONMENT.get_template('templates/index.html')
@@ -83,6 +84,11 @@ class MainPage(webapp2.RequestHandler):
         }
         self.response.headers['Content-Type'] = 'text/html'
         self.response.write(template.render(data))
+        if user:
+            if decorator.has_credentials():
+                importCalender()
+            else:
+                self.redirect(decorator.authorize_url())
         # try:
         #     http = decorator.http()
         #     calendarList = service.calendarList().list(pageToken=None).execute(http=http)
