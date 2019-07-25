@@ -370,9 +370,42 @@ li a {
   }
 
   #day_page_conatiner {
-    width: 600px;
+    width: 75%;
     margin: auto;
     padding: 50px;
-    background-color: rgba(255, 0, 0, 0.5);
-    border-radius: 50px;
+    /* background-color: rgba(166, 173, 64, 0.5);
+    border-radius: 50px; */
   }
+th {
+  margin: 0px;
+  padding: 0px;
+}
+td {
+  margin: 0px;
+  padding: 0px;
+}
+.table_title {
+  background-color: red;
+  border: 1px solid black;
+
+}
+.table_description {
+  background-color: blue;
+  border: 1px solid black;
+}
+.table_place {
+  background-color: green;
+  border: 1px solid black;
+}
+.table_date {
+  background-color: rgb(176, 108, 19);
+  border: 1px solid black;
+}
+.table_start_time {
+  background-color: orange;
+  border: 1px solid black;
+}
+.table_end_time {
+  background-color: purple;
+  border: 1px solid black;
+}

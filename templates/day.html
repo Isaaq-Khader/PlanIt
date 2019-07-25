@@ -16,6 +16,7 @@
     {% for name in invites %}
     <p>{{name.email}}</p>
     {% endfor %}
+
     <h1>Great! Your day is July 22 2019!</h1>
       <h2>Enter in some info about your hangout!</h2>
     <form method="post">
@@ -40,6 +41,27 @@
         <br>
       <input type="submit" name="" value="Submit">
     </form>
+
+    <table>
+      <tr>
+        <th class="table_title">Title</th>
+        <th class="table_description">Description</th>
+        <th class="table_place">Place</th>
+        <th class="table_date">Date</th>
+        <th class="table_start_time">Start Time</th>
+        <th class="table_end_time">End Time</th>
+      </tr>
+        {% for name in day_invites %}
+      <tr>
+        <td class="table_title">{{name.title}}</td>
+        <td class="table_description">{{name.description}}</td>
+        <td class="table_place">{{name.place}}</td>
+        <td class="table_date">{{name.date}}</td>
+        <td class="table_start_time">{{name.start_time}}</td>
+        <td class="table_end_time">{{name.end_time}}</td>
+      </tr>
+        {% endfor %}
+    </table>
 </div>
   </body>
 </html>
