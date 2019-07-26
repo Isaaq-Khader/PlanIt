@@ -7,6 +7,7 @@
    <link rel="stylesheet" href="/css/style.css">
    <link href="https://fonts.googleapis.com/css?family=Titillium+Web&display=swap" rel="stylesheet">
 
+
 </head>
 <body id="invite_page">
     <ul class="bullets">
@@ -19,7 +20,7 @@
     <div class="invite_main_cantainer">
 
     <div class="invite_box1">
-        <h1>Add Event:</h1>
+        <h1>Add Email</h1>
         <form method="post">
           <div>
             Enter: <input type="email" name="email" value="">
@@ -32,7 +33,7 @@
     </div>
 
     <div class="invite_box2">
-    <h1>Current Invites</h1>
+    <h1>Current Emails</h1>
 
      <form class="" action="/delete_invites?event_key={{event_key}}" method="post">
        <table>
@@ -51,12 +52,12 @@
       </form>
      </div>
         <!-- This page is for choosing what day everyone will hang out -->
-     <div class="invite_box3">
+     <!-- <div class="invite_box3">
       <h1>Available Days</h1>
       {% for name in invites %}
       <p>{{name.email}}</p>
         {% endfor %}
-     </div>
+     </div> -->
 </div>
 
  </body>

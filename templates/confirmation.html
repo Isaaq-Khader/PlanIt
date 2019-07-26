@@ -1,2 +1,37 @@
 <!-- This confirms with the user that all the information on the page is correct -->
-<h1>Congrats! You got here to the confirmation page!!!!</h1>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+     <link rel="stylesheet" href="/css/style.css">
+    <title></title>
+  </head>
+  <body id="confirmation_page">
+    <div class="form_page">
+      <h1 style="color: white;" align="center">Now Meet Up With Your Friends</h1>
+      <table>
+        <tr>
+          <th class="table_title">Title</th>
+          <th class="table_description">Description</th>
+          <th class="table_place">Place</th>
+          <th class="table_date">Date</th>
+          <th class="table_start_time">Start Time</th>
+          <th class="table_end_time">End Time</th>
+        </tr>
+
+        <tr>
+          <td class="table_title">{{event.title}}</td>
+          <td class="table_description">{{event.description}}</td>
+          <td class="table_place">{{event.place}}</td>
+          <td class="table_date">{{event.date}}</td>
+          <td class="table_start_time">{{event.startTime}}</td>
+          <td class="table_end_time">{{event.endTime}}</td>
+        </tr>
+
+      </table>
+    </div>
+
+
+
+  </body>
+</html>

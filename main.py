@@ -57,6 +57,7 @@ class Event(ndb.Model):
     place = ndb.StringProperty()
     title = ndb.StringProperty()
     description = ndb.StringProperty()
+    date = ndb.StringProperty()
     location = ndb.StringProperty()
     startTime = ndb.StringProperty()
     endTime = ndb.StringProperty()
@@ -81,7 +82,7 @@ class MainPage(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('templates/index.html')
         data = {
           'user': user,
-          'login_url': users.create_login_url(self.request.uri),
+          'login_url': users.create_login_url('/'),
           'logout_url': users.create_logout_url(self.request.uri),
 
         }
@@ -306,23 +307,40 @@ class DayPage(webapp2.RequestHandler):
         myKey = ndb.Key(urlsafe=event_key)
         emails = Invite.query(Invite.event_key == myKey, ancestor=root_parent()).fetch()
 
+        sum_param = self.request.get('event_title')
+        location_param = self.request.get('event_place')
+        des_param = self.request.get('event_des')
+        event_start_param = self.request.get('event_start')
+        event_end_param = self.request.get('event_end')
+        event_date_param = self.request.get('event_date')
+
+        day_invites = {
+            'title': sum_param,
+            'description': location_param,
+            'place':des_param,
+            'start_time':event_start_param,
+            'end_time':event_end_param,
+            'date':event_date_param,
+        }
+
         data = {
             'invites': emails,
             'event_key': event_key,
+            'day_invites': day_invites
         }
         self.response.write(template.render(data))
 
-
     @decorator.oauth_required
     def post(self):
+        print(self.request)
         event_key = self.request.get('event_key')
+        print(event_key)
         invites = Invite.query(Invite.event_key == ndb.Key(urlsafe=event_key), ancestor=root_parent()).fetch()
         attendees = []
         for invite in invites:
             attendee = {
                 'email': invite.email,
                 'event_key': event_key,
-                'day_invites': Invite.query(ancestor=root_parent()).fetch(),
             }
             attendees.append(attendee)
 
@@ -334,22 +352,19 @@ class DayPage(webapp2.RequestHandler):
         event_end_param = self.request.get('event_end')
         event_date_param = self.request.get('event_date')
 
+        dateTimeStart = event_date_param + "T" + event_start_param + ":00-07:00"
+        dateTimeEnd = event_date_param + "T" + event_end_param + ":00-07:00"
 
-        new_event = Event(parent=root_parent())
+        new_event = ndb.Key(urlsafe=self.request.get('event_key')).get()
         new_event.title = self.request.get('event_title')
         new_event.description = self.request.get('event_des')
-        new_event.event_key = ndb.Key(urlsafe=self.request.get('event_key'))
+        new_event.place = self.request.get('event_place')
+        new_event.date = self.request.get('event_date')
+        new_event.startTime = dateTimeStart
+        new_event.endTime = dateTimeEnd
         new_event.location= self.request.get('event_place')
         new_event.put()
 
-        dateTimeStart = event_date_param + "T17:00:00-" + event_start_param
-        dateTimeEnd = event_date_param + "T17:00:00-" + event_end_param
-
-        print event_start_param
-        print event_end_param
-        print event_date_param
-        print dateTimeStart
-        print dateTimeEnd
 
         event = {
           'summary': sum_param,
@@ -379,12 +394,18 @@ class DayPage(webapp2.RequestHandler):
         #         print(calendar_list_entry['summary'])
         # except client.AccessTokenRefreshError:
         #     self.redirect(decorator.authorize_url())
+        data = {
+            'invites': invites,
+            'event_key': event_key,
 
-
+        }
+        template = JINJA_ENVIRONMENT.get_template('templates/day.html')
+        self.response.write(template.render(data))
         http = decorator.http()
         e = service.events().insert(calendarId='primary', body=event).execute(http=http)
         print 'Event created: %s' % (e.get('htmlLink'))
-        self.redirect('/confirmation?event_key='+Event)
+        print event_key
+        self.redirect('/confirmation?event_key='+ self.request.get("event_key"))
 
 
 class ContactPage(webapp2.RequestHandler):
@@ -407,23 +428,20 @@ class DeleteInvites(webapp2.RequestHandler):
 
 class Confirmation(webapp2.RequestHandler):
     def get(self):
+        event_key = self.request.get('event_key')
+        key = ndb.Key(urlsafe = event_key)
+        print(key)
+        print(self.request)
+        event = key.get()
         template = JINJA_ENVIRONMENT.get_template('templates/confirmation.html')
         self.response.headers['Content-Type'] = 'text/html'
         data = {
-            'invites': Invite.query(ancestor=root_parent()).fetch()
+            'event': event,
+            'event_key': event_key,
         }
+        print(event_key)
         self.response.write(template.render(data))
 
-    def post(self):
-        # INVITIES HAS NOT BEEN TESTED!!!
-        new_invite = Invite(parent=root_parent())
-        invities = CreateEvent(parent=root_parent())
-        new_invite.email = self.request.get('email')
-        invities.attendees.email = self.request.get('email')
-        new_invite.put()
-        invities.put()
-
-        self.redirect('/invite')
 
 # The App Config
 app = webapp2.WSGIApplication([
@@ -432,7 +450,7 @@ app = webapp2.WSGIApplication([
     ('/day', DayPage),
     ('/delete_invites', DeleteInvites),
     ('/contact',ContactPage),
-    ('confirmation',Confirmation),
+    ('/confirmation',Confirmation),
     (decorator.callback_path, decorator.callback_handler()),
 
 ], debug=True)
