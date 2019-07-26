@@ -370,9 +370,131 @@ li a {
   }
 
   #day_page_conatiner {
-    width: 600px;
+    width: 75%;
     margin: auto;
     padding: 50px;
-    background-color: rgba(255, 0, 0, 0.5);
+    background-color: rgba(100, 132, 158, 0.5);
     border-radius: 50px;
   }
+th {
+  margin: 0px;
+  padding: 0px;
+}
+td {
+  margin: 0px;
+  padding: 0px;
+  font-size: 20px;
+}
+.form_page {
+  width: 50%;
+  margin: auto;
+}
+.table_title {
+  background-color: red;
+  border: 1px solid black;
+  color: white;
+
+}
+.table_description {
+  background-color: blue;
+  border: 1px solid black;
+  color: white;
+}
+.table_place {
+  background-color: green;
+  border: 1px solid black;
+  color: white;
+}
+.table_date {
+  background-color: rgb(176, 108, 19);
+  border: 1px solid black;
+  color: white;
+}
+.table_start_time {
+  background-color: orange;
+  border: 1px solid black;
+  color: white;
+}
+.table_end_time {
+  background-color: purple;
+  border: 1px solid black;
+  color: white;
+}
+.form-style-4{
+	width: 450px;
+	font-size: 16px;
+	background: #495C70;
+	padding: 30px 30px 15px 30px;
+	border: 5px solid #53687E;
+}
+.form-style-4 input[type=submit],
+.form-style-4 input[type=button],
+.form-style-4 input[type=text],
+.form-style-4 input[type=email],
+.form-style-4 textarea,
+.form-style-4 label
+{
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 16px;
+	color: #fff;
+
+}
+.form-style-4 label {
+	display:block;
+	margin-bottom: 10px;
+}
+.form-style-4 label > span{
+	display: inline-block;
+	float: left;
+	width: 150px;
+}
+.form-style-4 input[type=text],
+.form-style-4 input[type=email]
+{
+	background: transparent;
+	border: none;
+	border-bottom: 1px dashed #83A4C5;
+	width: 275px;
+	outline: none;
+	padding: 0px 0px 0px 0px;
+	font-style: italic;
+}
+.form-style-4 textarea{
+	font-style: italic;
+	padding: 0px 0px 0px 0px;
+	background: transparent;
+	outline: none;
+	border: none;
+	border-bottom: 1px dashed #83A4C5;
+	width: 275px;
+	overflow: hidden;
+	resize:none;
+	height:20px;
+}
+
+.form-style-4 textarea:focus,
+.form-style-4 input[type=text]:focus,
+.form-style-4 input[type=email]:focus,
+.form-style-4 input[type=email] :focus
+{
+	border-bottom: 1px dashed #D9FFA9;
+}
+
+.form-style-4 input[type=submit],
+.form-style-4 input[type=button]{
+	background: #576E86;
+	border: none;
+	padding: 8px 10px 8px 10px;
+	border-radius: 5px;
+	color: #A8BACE;
+}
+.form-style-4 input[type=submit]:hover,
+.form-style-4 input[type=button]:hover{
+background: #394D61;
+}
+#confirmation_page {
+  background-image: url('https://static1.squarespace.com/static/59e4e8ef90badef482f24094/5a69cf93f9619adf795e9f21/5a6a4e410d929757985f09b1/1558375625695/03_08_2017_NYT-anim_WIP-6-12fps.gif?format=2500w');
+  background-size:cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}

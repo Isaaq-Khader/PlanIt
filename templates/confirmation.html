@@ -1,38 +1,37 @@
 <!-- This confirms with the user that all the information on the page is correct -->
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
- <head>
-   <meta charset="utf-8">
-   <title>Confirmation Page</title>
- </head>
-   <body>
-     <h1>Congrats! You made it to the confirmation page!</h1>
-     <h2>Please confirm if all the information down below is correct</h2>
-     <table>
+  <head>
+    <meta charset="utf-8">
+     <link rel="stylesheet" href="/css/style.css">
+    <title></title>
+  </head>
+  <body id="confirmation_page">
+    <div class="form_page">
+      <h1 style="color: white;" align="center">Now Meet Up With Your Friends</h1>
+      <table>
         <tr>
-          <th>Event Name</th>
-          <th>Event description</th>
-          <th>Invites</th>
-          <th>Place</th>
-          <th>Date</th>
-          <th>Start Time</th>
-          <th>End Time</th>
+          <th class="table_title">Title</th>
+          <th class="table_description">Description</th>
+          <th class="table_place">Place</th>
+          <th class="table_date">Date</th>
+          <th class="table_start_time">Start Time</th>
+          <th class="table_end_time">End Time</th>
         </tr>
-        {% for invite in invites %}
+
         <tr>
-          <td>{{invite.email}}</td>
+          <td class="table_title">{{event.title}}</td>
+          <td class="table_description">{{event.description}}</td>
+          <td class="table_place">{{event.place}}</td>
+          <td class="table_date">{{event.date}}</td>
+          <td class="table_start_time">{{event.startTime}}</td>
+          <td class="table_end_time">{{event.endTime}}</td>
         </tr>
-        {% endfor %}
-        </tr>
-        {% for event in events %}
-        <tr>
-          <td>{{event.title}}</td>
-          <td>{{event.description}}</td>
-          <td>{{event.location}}</td>
-          <td>{{event.startTime}}</td>
-          <td>{{event.endTime}}</td>
-        </tr>
-        {% endfor %}
+
       </table>
-   </body>
+    </div>
+
+
+
+  </body>
 </html>
