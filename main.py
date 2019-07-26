@@ -317,59 +317,21 @@ class DayPage(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('templates/day.html')
         self.response.headers['Content-Type'] = 'text/html'
         event_key = self.request.get('event_key')
+        myKey = ndb.Key(urlsafe=event_key)
+        emails = Invite.query(Invite.event_key == myKey, ancestor=root_parent()).fetch()
         # dateTimeStart and dateTimeEnd must be for that certain day. So for example it is already set up
         # to be set for the day July 24th, 2019
 
         date_object = datetime.today()
         print(date_object)
-
-
-
-            # elif start_date != end_date:
-            #     hr = slice(2)
-            #     rest_of_time = slice(2,5)
-            #
-            #     start_int = int(start_time[hr])
-            #     end_int = int(end_time[hr])
-            #
-            #     if start_int > 12:
-            #         start_int = start_int - 12
-            #         start_ending = "PM"
-            #     elif start_int == 0:
-            #         start_int = 12
-            #         start_ending = "AM"
-            #     else:
-            #         start_ending = "AM"
-            #
-            #     if end_int > 12:
-            #         end_int = end_int - 12
-            #         end_ending = "PM"
-            #     elif end_int == 0:
-            #         end_int = 12
-            #         end_ending = "AM"
-            #     else:
-            #         end_ending = "AM"
-            #
-            #     start = str(start_int) + start_time[rest_of_time] + " " + start_ending
-            #     end = str(end_int) + end_time[rest_of_time] + " " + end_ending
-            #
-            #     avaliable = "12:00 AM - " + start + " (" + start_date + ") - " + end + " (" + end_date + ")"
-            #     print avaliable
-            # else:
-            #     print("Uh oh!")
-
-
-        # if max - other_time > 0:
-        #     other_time = end_time
-        #     print end_time
-        # if max - other_time == 0:
-        #     max = end_time
-        #     print end_time
-        # if max - other_time < 0:
-        #     max = end_time
-        #     print end_time
-        myKey = ndb.Key(urlsafe=event_key)
-        emails = Invite.query(Invite.event_key == myKey, ancestor=root_parent()).fetch()
+        availability = []
+        for email in emails:
+            getDate = UserCalender.query(UserCalender.date == self.request.get('eventDate'), UserCalender.email==email.email, ancestor=root_parent()).fetch()
+            if len(getDate) == 0:
+                continue
+            filter_date = getDate[0].avaliableTimes
+            filter_email = getDate[0].email
+            availability.append({"times": filter_date,"email": filter_email})
 
         sum_param = self.request.get('event_title')
         location_param = self.request.get('event_place')
@@ -390,7 +352,8 @@ class DayPage(webapp2.RequestHandler):
         data = {
             'invites': emails,
             'event_key': event_key,
-
+            "availability": availability,
+            "date": self.request.get('eventDate'),
         }
         self.response.write(template.render(data))
 
@@ -473,6 +436,9 @@ class DayPage(webapp2.RequestHandler):
         self.redirect('/confirmation?event_key='+ self.request.get("event_key"))
 
 
+
+
+
 class ContactPage(webapp2.RequestHandler):
     def get(self):
         template = JINJA_ENVIRONMENT.get_template('templates/contact.html')
@@ -500,36 +466,36 @@ class Confirmation(webapp2.RequestHandler):
         event = key.get()
         template = JINJA_ENVIRONMENT.get_template('templates/confirmation.html')
         self.response.headers['Content-Type'] = 'text/html'
-        event_key = self.request.get('event_key')
-        myKey = ndb.Key(urlsafe=event_key)
-        emails = Invite.query(Invite.event_key == myKey, ancestor=root_parent()).fetch()
-        sum_param = self.request.get('event_title')
-        location_param = self.request.get('event_place')
-        des_param = self.request.get('event_des')
-        event_start_param = self.request.get('event_start')
-        event_end_param = self.request.get('event_end')
-        event_date_param = self.request.get('event_date')
-        event = {
-          'summary': sum_param,
-          'location': location_param,
-          'description': des_param,
-          'start': {
-            'dateTime': dateTimeStart, #'2019-07-23T17:00:00-07:00'
-            'timeZone': 'America/Los_Angeles',
-          },
-          'end': {
-            'dateTime': dateTimeEnd,
-            'timeZone': 'America/Los_Angeles',
-          },
-          'attendees': attendees,
-          'reminders': {
-            'useDefault': False,
-            'overrides': [
-              {'method': 'email', 'minutes': 24 * 60},
-              {'method': 'popup', 'minutes': 10},
-            ],
-          },
-        }
+        # event_key = self.request.get('event_key')
+        # myKey = ndb.Key(urlsafe=event_key)
+        # emails = Invite.query(Invite.event_key == myKey, ancestor=root_parent()).fetch()
+        # sum_param = self.request.get('event_title')
+        # location_param = self.request.get('event_place')
+        # des_param = self.request.get('event_des')
+        # event_start_param = self.request.get('event_start')
+        # event_end_param = self.request.get('event_end')
+        # event_date_param = self.request.get('event_date')
+        # event = {
+        #   'summary': sum_param,
+        #   'location': location_param,
+        #   'description': des_param,
+        #   'start': {
+        #     'dateTime': event_start_param, #'2019-07-23T17:00:00-07:00'
+        #     'timeZone': 'America/Los_Angeles',
+        #   },
+        #   'end': {
+        #     'dateTime': event_end_param,
+        #     'timeZone': 'America/Los_Angeles',
+        #   },
+        #   'attendees': emails,
+        #   'reminders': {
+        #     'useDefault': False,
+        #     'overrides': [
+        #       {'method': 'email', 'minutes': 24 * 60},
+        #       {'method': 'popup', 'minutes': 10},
+        #     ],
+        #   },
+        # }
 
         data = {
             'event': event,

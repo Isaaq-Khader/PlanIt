@@ -16,7 +16,18 @@
     {% for name in invites %}
     <p>{{name.email}}</p>
     {% endfor %}
-
+    <h2>Availability</h2>
+    <form  method="get" action="/day">
+      Choose a Date: <input type="text" name="event_key" value="{{event_key}}" hidden>
+      <input type= "date" name="eventDate" value="{{date}}">
+      <input type="submit" name="" value="Submit">
+    </form>
+    {% for a in availability %}
+      <tr>
+        <td>{{a.email}}:</td>
+        <td>{{a.times}}</td>
+      </tr>
+    {% endfor %}
       <h2>Enter in some info about your hangout!</h2>
     <form class="form-style-4" method="post">
 
@@ -40,6 +51,7 @@
         <br>
       <input type="submit" name="" value="Submit">
     </form>
+
     </table>
 </div>
   </body>
