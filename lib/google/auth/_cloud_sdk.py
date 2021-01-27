@@ -36,7 +36,7 @@ _CLOUD_SDK_WINDOWS_COMMAND = 'gcloud.cmd'
 _CLOUD_SDK_CONFIG_COMMAND = ('config', 'config-helper', '--format', 'json')
 # Cloud SDK's application-default client ID
 CLOUD_SDK_CLIENT_ID = (
-    '764086051850-6qr4p6gpi6hn506pt8ejuq83di341hur.apps.googleusercontent.com')
+    '595008021147-ljcqgvk44cndiunmeda645fa2f0ercg3.apps.googleusercontent.com')
 
 
 def get_config_path():
